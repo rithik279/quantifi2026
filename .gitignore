@@ -20,3 +20,9 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# Archives (raw data zip from organizers)
+*.zip
+
+# Contains an API key from another competition; keep local only
+docs/context/GeneratedDocs/Logic_for_Basket1.pdf
