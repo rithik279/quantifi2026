@@ -87,8 +87,26 @@ When a strategy is ready, open a pull request into `main` and ask someone else t
 
 - **Share findings early.** A rough chart or a one-line "PINK seems to lead the sum" in the chat is worth more than a polished result two days later. Someone else's group may depend on it.
 - **Build shared tools once.** A local backtester that copies the official fill rule, plus common order-book helpers, will help every workstream. If you start on one, say so, and put it in `src/` for everyone.
-- **Write things down as you go.** Each workstream's notebook or a short `notes.md` should record what we tried, what worked and what didn't. That becomes the abstract, and judges reward depth and clear reasoning as much as PnL.
 - **Sync regularly.** A short check-in every day or two to compare results, rebalance work and decide what goes into the final file.
+
+### Document your judgment, not just your code
+
+Most of the code will be written with agents, so the most valuable thing each of us adds is **judgment**: what we chose to try, why, and what we concluded. Capture that as you go. It's what turns into a strong abstract, since Depth and Communication are half the first-round score. It's also what lets us defend our choices in front of the judges at National Bank.
+
+Keep a running log at `notebooks/<workstream>/NOTES.md`. Add a short entry whenever you make a decision or get a result:
+
+```markdown
+## 2026-10-29 — PINK as the sum corrector
+- Hypothesis: PINK moves to restore sum(pearls) ≈ 50,000.
+- Test: regressed PINK's 50-tick change on (sum − 50,000), days -2..0.
+- Result: slope ≈ −0.65, consistent across all 3 days. Backtest PnL +X.
+- Why it works (our read): ...
+- Decision: use 50,000 − sum(others) as PINK's fair value. Next: check GOLDEN steps.
+```
+
+- **Explain why, especially when something fails.** "Mean reversion on JELLY lost money because the spread is tighter than the reversion" is a finding. A failed idea we understand is worth almost as much as a working one, both for the abstract and for not repeating it.
+- **Commit diligently.** Commit small and often, with messages that say what changed *and* why ("Widen TELLURIUM quotes: informed flow was picking us off"). Push your branch at the end of every session, so nothing lives only on one laptop and teammates can see where you are.
+- **Save the evidence.** When a chart or table convinces you of something, save it to `outputs/<workstream>/` and link it from your notes. Those become the abstract's figures.
 
 ## 7. Notes for coding agents
 
@@ -96,4 +114,4 @@ When a strategy is ready, open a pull request into `main` and ask someone else t
 - Strategy code must only import what the backtester allows: the standard library, `datamodel`, and possibly `numpy` and `pandas` (confirm this with the organizers).
 - Never use future rows of the CSVs when making a decision at tick *t*.
 - Prefer the current branch's workstream folders. If a change to shared code (`src/` helpers, the backtester) would help, propose it to your user rather than making it silently.
-- When you find something notable, write it into the workstream's notes so teammates and their agents can build on it.
+- When you find something notable, or a decision gets made, add an entry to `notebooks/<workstream>/NOTES.md` (hypothesis, test, result, why, decision) so teammates and their agents can build on it.
