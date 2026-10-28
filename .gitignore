@@ -9,8 +9,8 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
-# Data (keep folder structure, not contents)
-data/raw/*
+# Data: raw organizer CSVs ARE committed (private repo, shared with team).
+# See README "Before making this repo public". Derived data stays local.
 data/processed/*
 !data/**/.gitkeep
 
