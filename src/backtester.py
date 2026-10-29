@@ -287,11 +287,19 @@ def get_day(day: int, products: Optional[Iterable[str]] = None) -> DayData:
 
 def backtest(trader_factory, days: Iterable[int] = (-2, -1, 0), products: Optional[Iterable[str]] = None,
              record_every: int = 100, keep_fills: bool = False) -> BacktestResult:
-    """trader_factory: a Trader class or a zero-arg callable returning a fresh trader."""
+    """trader_factory: a Trader class or a zero-arg callable returning a fresh trader.
+
+    If the trader has a `set_day(day)` method it is called before the day starts. The real engine
+    never tells the trader the day; this hook only exists so backtests of day-dependent logic
+    (e.g. option time-to-expiry) are right. Submissions should default to the scoring day (1).
+    """
     res = []
     for d in days:
         data = get_day(d, products)
-        res.append(run_day(trader_factory(), data, record_every=record_every, keep_fills=keep_fills))
+        trader = trader_factory()
+        if hasattr(trader, "set_day"):
+            trader.set_day(d)
+        res.append(run_day(trader, data, record_every=record_every, keep_fills=keep_fills))
     return BacktestResult(res)
 
 
