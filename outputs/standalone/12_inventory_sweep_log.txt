@@ -1,0 +1,73 @@
+144 backtests
+
+=== PAPER_LANTERNS: top 6 by worst day across all three ===
+                                                                                  params    d_2    d_1    d0  std_day  total
+{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50} 3487.0 1866.0 385.0   1552.0 5738.0
+{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25} 2702.0 1442.0 385.0   1160.0 4528.0
+  {'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3}  623.0  326.0 290.0    183.0 1240.0
+ {'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}  664.0  356.0 266.0    209.0 1286.0
+  {'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3}  598.0  306.0 116.0    243.0 1020.0
+{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}  633.0  234.0  15.0    313.0  882.0
+   walk-forward pick (train -2,-1): {'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50} -> d0 -498
+   by soft_cap (mean over other params):
+        d_2    d_1     d0  std_day
+cap                               
+3     457.0   67.0 -106.0    291.0
+10   1125.0  -29.0 -346.0    793.0
+25   1444.0  319.0 -386.0    963.0
+50   1616.0  490.0 -386.0   1061.0
+
+=== TELLURIUM: top 6 by worst day across all three ===
+                                                                                                            params    d_2     d_1      d0  std_day   total
+ {'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 50} 9196.0 10879.0 26252.0   9399.0 46326.0
+ {'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10} 6440.0  8160.0  8893.0   1259.0 23494.0
+{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 25} 8748.0 10010.0  6092.0   2000.0 24850.0
+ {'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25} 9128.0  9984.0  5870.0   2170.0 24982.0
+{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 50} 9583.0  7064.0  5784.0   1933.0 22432.0
+ {'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 10} 6254.0  5632.0  6558.0    472.0 18445.0
+   walk-forward pick (train -2,-1): {'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25} -> d0 3610
+   by soft_cap (mean over other params):
+        d_2     d_1       d0  std_day
+cap                                  
+3    1277.0  3345.0   3258.0   1395.0
+10   1814.0  6764.0   9264.0   3920.0
+25  -1864.0  3714.0   8698.0   9401.0
+50  -6438.0  1107.0  15373.0  13700.0
+
+=== JELLY: top 6 by worst day across all three ===
+                                                                      params    d_2   d_1    d0  std_day  total
+ {'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3} -766.0 742.0 426.0    796.0  402.0
+ {'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3} -766.0 742.0 426.0    796.0  402.0
+ {'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3} -766.0 742.0 426.0    796.0  402.0
+{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3} -766.0 742.0 426.0    796.0  402.0
+ {'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3} -766.0 742.0 426.0    796.0  402.0
+{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 3} -766.0 742.0 426.0    796.0  402.0
+   walk-forward pick (train -2,-1): {'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3} -> d0 426
+   by soft_cap (mean over other params):
+        d_2     d_1      d0  std_day
+cap                                 
+3    -766.0   742.0   426.0    796.0
+10  -2405.0  1550.0  1117.0   2170.0
+25  -1974.0  1242.0 -1699.0   1935.0
+50  -1817.0   645.0 -1797.0   1637.0
+
+=== PEANUT_BUTTER: top 6 by worst day across all three ===
+                                                                      params    d_2    d_1     d0  std_day   total
+{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 50} -320.0  712.0  -23.0    531.0   369.0
+{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10} -320.0  712.0  -23.0    531.0   369.0
+{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25} -320.0  712.0  -23.0    531.0   369.0
+ {'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3} -206.0 -240.0 -516.0    170.0  -962.0
+ {'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3} -246.0 -252.0 -547.0    172.0 -1046.0
+{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 25}  -94.0 1399.0 -833.0   1137.0   472.0
+   walk-forward pick (train -2,-1): {'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 10} -> d0 -1657
+   by soft_cap (mean over other params):
+       d_2     d_1      d0  std_day
+cap                                
+3    -11.0   450.0  -894.0    696.0
+10  -231.0  1398.0 -1153.0   1420.0
+25  -474.0   794.0  -831.0   1049.0
+50  -477.0   320.0 -1274.0   1001.0
+
+real	1m42.116s
+user	0m0.000s
+sys	0m0.000s
