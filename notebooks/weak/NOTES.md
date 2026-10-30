@@ -126,3 +126,36 @@ Branch `rithik/weak-products`, cut from tag `best-316k` (official score 316,088)
 - **Result:** uploaded `submission/trader.py` from this branch (commit cc5006a). The official site gave **~357k** (Rithik's report), essentially equal to our local 356,991 and up from 316,088 for `best-316k`.
 - **Why it matters:** the TELLURIUM glide overlay works on their engine too, and our local backtester matches theirs almost exactly for this version.
 - **Decision:** tagged as `best-357k`. `best-316k` stays as the previous fallback.
+
+### 2026-10-30: PB & J coordinated passive market maker (ChatGPT's proposal) (`10_pbj_coordinated_mm.py`, `17_pbj_coordinated_mm.csv`)
+- **Proposal:** quote JELLY passively and treat PB purely as a hedge, with factor exposure F = PB position + 0.41 × JELLY position. Post a *passive* PB order only when the hedge error reaches a band, stop quoting the JELLY side that would worsen F, and optionally add a stale-leg filter (u = 0.41 × ΔPB − ΔJELLY) to choose which JELLY side to quote.
+- **Test matrix as proposed:** JELLY cap 3 / 5 / 10 × hedge band 2 / 4 / 6 × filter on/off, plus the same without the hedge, versus today's independent market-making. 24 variants.
+- **Result:**
+  - *Every variant loses on at least one day.* Totals range from −4.0k to +1.6k; the current setup makes +0.8k.
+  - *The hedge barely triggers.* With JELLY capped at 3–10 units, mean |F| is only 1–2.6 PB units, usually inside the band, so PB trades 0–45 units over three days.
+  - *The stale-leg filter lowers every variant.*
+  - *At a 50% fill rate,* the best coordinated versions make −0.6k, versus +2.4k for the current setup.
+- **Why:** the risk it hedges is already tiny at these inventory caps, and JELLY's market-making edge is about zero after adverse moves. Hedging cuts variance, not the mean.
+- **Decision:** no change. The PB & J link stays a depth/risk finding for the abstract.
+
+### 2026-10-30: pearls deep dive (Rithik's guidance: "maybe they move together, maybe one leads the others, maybe one is a combination of the rest") (`11_pearls_deep.py`)
+- **"One is a combination of the rest":** confirmed earlier. The five sum to 50,000, and PINK is the balancing one (PINK ≈ 28k over 3 days).
+- **"One leads the others":** a linear model of each pearl's next 5/20/100-tick move, fitted on days −2/−1 and tested on day 0 (`18_pearls_predictive_models.csv`).
+  - **WHITE:** all-pearls model corr 0.09–0.11 on every day at 5 and 20 ticks, versus 0.01–0.05 using only WHITE's own history. The biggest drivers are BLUE's recent move and its gap from its 20-tick EMA.
+  - **BLACK:** 0.09–0.13 versus 0.02–0.05 own-only. Drivers: GOLDEN's and WHITE's gaps.
+  - **BLUE:** its own momentum explains it (0.15–0.23), and the other pearls add nothing.
+  - **PINK:** the sum deviation dominates (corr ~0.48 at 20 ticks), and the other pearls add nothing beyond it.
+  - **GOLDEN:** high R², but that's its own ±0.5 quote bounce plus the slides.
+- **Trade impact** (a 20-tick move after an aggressive trade): small (≤ 3 coins) next to pearl spreads of 4–8. A few signs are consistent across days (WHITE buy → BLACK up, BLUE buy → BLACK down, PINK buy → BLUE up).
+- **Economic size (day 0, out-of-sample):** the predicted 20-tick move beats half the spread on only 0.5–2% of ticks (9% for PINK). When it does, the direction is right 60–76% of the time, but the gain beyond half the spread (+2–4 coins for WHITE/BLACK/BLUE) is about what the other half of the spread costs to get out.
+- **Prototype** (`12_pearls_prototypes.py`, `20_pearls_leaned_mm.csv`): lean fair value = mid + c × predicted 20-tick move, with the model frozen on days −2/−1. There's no improvement for WHITE, BLACK or BLUE at any c or inventory cap: day 0 stays flat or slightly worse, and WHITE's training days get worse. *The relationship is statistically real but too small to beat the spread with ~60 trades a day per pearl.* No change.
+
+### 2026-10-30: GOLDEN slides between plateaus (`19_golden_steps.png`, `13_golden_slide.py`, `21_golden_slide.csv`)
+- **What the chart shows:** GOLDEN doesn't jump between plateaus. It **slides in a straight line** (~1–2 coins per tick for ~50 ticks) to the next level, then sits there for thousands of ticks. There are three slides in three days: 8,000 → 7,900 (tick 15,809, day −1), 7,900 → 7,800 (20,911, day 0) and 7,800 → 7,750 (28,921, day 0), all downward. My earlier "two half-steps 25 ticks apart" was the detector splitting one slide in two.
+- **While GOLDEN slides, WHITE absorbs it:** WHITE rises about as much as GOLDEN falls, so the sum stays at 50,000. Over the next ~500 ticks WHITE gives it back while BLACK, BLUE and PINK take over. PINK corrects in a staircase (discrete moves every 50–100 ticks). This is the clearest "one leads the others" chain we've seen, but it rests on only three events.
+- **Strategy (same shape as TELLURIUM's glide):** if GOLDEN's mid moves ≥ 3 coins within 5 ticks (it normally only flickers ±0.5), take 20 units that way. Exit when the last 10-tick move drops below 1 coin. Market-make the plateau otherwise.
+  - **36 of 36 settings tried are positive on every day and beat today's GOLDEN** (1,064 → 3,846–5,057 over 3 days).
+  - **No false starts** with move 3 / window 5: exactly 3 entries in 30,000 ticks, one per slide.
+- **Chosen:** move 3, L 5, K 10, flat 1.0 → GOLDEN **142 / 1,960 / 2,940** (was 142 / −38 / 960). Day −2 had no slide, so it's unchanged.
+- **Caveats:** three events, all downward, all after day −2. The worst case is a false start costing about one spread on 20 units.
+- **Full submission** (`submission/trader.py` rebuilt; only GOLDEN changed): **120,906 / 127,082 / 112,982 = 360,970**, versus 356,991 for `best-357k`. Output: `22_submission_backtest_with_golden_slide.txt`. **Not yet checked on the official site; not tagged.**

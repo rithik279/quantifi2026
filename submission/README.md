@@ -27,6 +27,8 @@ Upload these files **in this order**. All of them import only `datamodel`, `json
 
 Upload from the `rithik/robustness` branch: it has the latest parameters and the combined file.
 
+**Candidate (2026-10-30, branch `rithik/weak-products`, not tagged):** best-357k plus a GOLDEN_PEARLS slide overlay. `submission/trader.py` there scores **120,906 / 127,082 / 112,982 = 360,970** locally (only GOLDEN changed, 1,064 → 5,043). Not yet checked on the official site.
+
 **Current best: tag `best-357k` (branch `rithik/weak-products`, 2026-10-30):** the same files plus a TELLURIUM glide overlay. `submission/trader.py` there scores **120,906 / 125,083 / 111,002 = 356,991** locally (versus 326,594 for `best-316k`; only TELLURIUM changed, 26,694 → 57,092). `src/strategies/standalone.py` alone: 62,762 / 65,289 / 59,574. **Official site: ~357k**, matching local.
 
 **Results so far (2026-10-30):** #6 `submission/trader.py` scored **316,088** on the official site, versus 326,594 locally (3.2% lower). Our backtester is well calibrated. Uploads #2–#5 would show which group accounts for the gap.
