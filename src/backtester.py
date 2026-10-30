@@ -77,9 +77,13 @@ class DayData:
     trades: Dict[int, Dict[str, List[tuple]]]  # ts -> symbol -> [(price, qty)]
 
 
-def load_day(day: int, products: Optional[Iterable[str]] = None) -> DayData:
+def load_day(day: int, products: Optional[Iterable[str]] = None, scenario: Optional[str] = None) -> DayData:
+    """scenario: name of an edit from src/scenarios.py applied to the real day (None = real data)."""
     prices = load_prices(day)
     trades = load_trades(day)
+    if scenario:
+        import scenarios  # local import: scenarios imports nothing from here
+        prices, trades = scenarios.apply(scenario, prices, trades, day)
     if products is not None:
         products = set(products)
         prices = prices[prices["product"].isin(products)]
@@ -124,6 +128,8 @@ class DayResult:
     cancelled_for_limit: Dict[str, int]
     pnl_curve: pd.DataFrame  # index timestamp, columns product (+ TOTAL)
     fills: List[dict] = field(default_factory=list)
+    end_cash: Dict[str, float] = field(default_factory=dict)
+    end_trader_data: str = ""
 
     @property
     def total(self) -> float:
@@ -160,20 +166,25 @@ def _load_trader(path: str):
 
 def run_day(trader, data: DayData, record_every: int = 100, keep_fills: bool = False,
             limits: Dict[str, int] = POSITION_LIMITS, passive_fill_rate: float = 1.0,
-            passive_mode: str = "all", seed: int = 0) -> DayResult:
+            passive_mode: str = "all", seed: int = 0, start=None) -> DayResult:
     """passive_fill_rate / passive_mode are STRESS settings, not the official rule:
     - passive_fill_rate < 1 skips each eligible historical trade with probability 1 - rate
       (a crude stand-in for other traders ahead of us in the queue);
     - passive_mode="worse" only fills us when a trade prints strictly THROUGH our price
       (a trade at exactly our price no longer counts).
+    start: optional (position, cash, trader_data) carried over from the previous day. PnL is then
+      the change in marked-to-mid value over this day.
     """
     rng = np.random.default_rng(seed)
     position: Dict[str, int] = defaultdict(int)
     cash: Dict[str, float] = defaultdict(float)
+    trader_data = ""
+    if start is not None:
+        position.update(start[0]); cash.update(start[1]); trader_data = start[2] or ""
+    start_value = {p: cash[p] + position.get(p, 0) * data.mids[p][0] for p in list(cash) if p in data.mids}
     n_fills: Dict[str, int] = defaultdict(int)
     volume: Dict[str, int] = defaultdict(int)
     cancelled: Dict[str, int] = defaultdict(int)
-    trader_data = ""
     own_prev: Dict[str, List[Trade]] = {}
     market_prev: Dict[str, List[Trade]] = {}
     products = sorted(data.mids.keys())
@@ -277,43 +288,54 @@ def run_day(trader, data: DayData, record_every: int = 100, keep_fills: bool = F
         market_prev = {s: v for s, v in market_prev.items() if v}
 
         if record_every and (i % record_every == 0 or i == len(data.timestamps) - 1):
-            row = {p: cash[p] + position.get(p, 0) * data.mids[p][i] for p in list(cash)}
+            row = {p: cash[p] + position.get(p, 0) * data.mids[p][i] - start_value.get(p, 0.0) for p in list(cash)}
             curve_rows.append(row)
             curve_idx.append(ts)
 
     last = len(data.timestamps) - 1
-    pnl = {p: cash[p] + position.get(p, 0) * data.mids[p][last] for p in list(cash)}
+    pnl = {p: cash[p] + position.get(p, 0) * data.mids[p][last] - start_value.get(p, 0.0) for p in list(cash)}
     curve = pd.DataFrame(curve_rows, index=curve_idx).ffill().fillna(0.0)
     if not curve.empty:
         curve["TOTAL"] = curve.sum(axis=1)
-    return DayResult(data.day, pnl, dict(position), dict(n_fills), dict(volume), dict(cancelled), curve, fills)
+    return DayResult(data.day, pnl, dict(position), dict(n_fills), dict(volume), dict(cancelled), curve, fills,
+                     end_cash=dict(cash), end_trader_data=trader_data)
 
 
 _DAY_CACHE: Dict[tuple, DayData] = {}
 
 
-def get_day(day: int, products: Optional[Iterable[str]] = None) -> DayData:
-    key = (day, tuple(sorted(products)) if products else None)
+def get_day(day: int, products: Optional[Iterable[str]] = None, scenario: Optional[str] = None) -> DayData:
+    key = (day, tuple(sorted(products)) if products else None, scenario)
     if key not in _DAY_CACHE:
-        _DAY_CACHE[key] = load_day(day, products)
+        _DAY_CACHE[key] = load_day(day, products, scenario)
     return _DAY_CACHE[key]
 
 
 def backtest(trader_factory, days: Iterable[int] = (-2, -1, 0), products: Optional[Iterable[str]] = None,
-             record_every: int = 100, keep_fills: bool = False, **stress) -> BacktestResult:
+             record_every: int = 100, keep_fills: bool = False, scenario: Optional[str] = None,
+             continuous: bool = False, **stress) -> BacktestResult:
     """trader_factory: a Trader class or a zero-arg callable returning a fresh trader.
 
     If the trader has a `set_day(day)` method it is called before the day starts. The real engine
     never tells the trader the day; this hook only exists so backtests of day-dependent logic
     (e.g. option time-to-expiry) are right. Submissions should default to the scoring day (1).
+
+    scenario: run on an edited version of the real days (see src/scenarios.py).
+    continuous: one trader for all days, with position, cash and traderData carried over
+      (in case the real engine runs days back to back). Default: each day starts fresh.
     """
     res = []
+    trader, carry = None, None
     for d in days:
-        data = get_day(d, products)
-        trader = trader_factory()
+        data = get_day(d, products, scenario)
+        if trader is None or not continuous:
+            trader, carry = trader_factory(), None
         if hasattr(trader, "set_day"):
             trader.set_day(d)
-        res.append(run_day(trader, data, record_every=record_every, keep_fills=keep_fills, **stress))
+        r = run_day(trader, data, record_every=record_every, keep_fills=keep_fills, start=carry, **stress)
+        if continuous:
+            carry = (r.final_position, r.end_cash, r.end_trader_data)
+        res.append(r)
     return BacktestResult(res)
 
 
