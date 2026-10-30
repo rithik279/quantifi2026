@@ -159,3 +159,7 @@ Branch `rithik/weak-products`, cut from tag `best-316k` (official score 316,088)
 - **Chosen:** move 3, L 5, K 10, flat 1.0 → GOLDEN **142 / 1,960 / 2,940** (was 142 / −38 / 960). Day −2 had no slide, so it's unchanged.
 - **Caveats:** three events, all downward, all after day −2. The worst case is a false start costing about one spread on 20 units.
 - **Full submission** (`submission/trader.py` rebuilt; only GOLDEN changed): **120,906 / 127,082 / 112,982 = 360,970**, versus 356,991 for `best-357k`. Output: `22_submission_backtest_with_golden_slide.txt`. **Not yet checked on the official site; not tagged.**
+
+### 2026-10-30: official-site check of the GOLDEN slide version
+- **Result:** the official site gave **~361k** (Rithik's report), matching our local 360,970. Tagged `best-361k` (commit 856b886) and pushed.
+- **Next:** this branch was merged with `rithik/adaptive` into `rithik/combined`. See `notebooks/robustness/NOTES.md` for that comparison.

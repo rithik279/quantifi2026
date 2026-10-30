@@ -99,3 +99,12 @@ The real engine's queue priority isn't modelled, which is part of why this backt
 ### 2026-10-30: TELLURIUM glide overlay (developed on `rithik/weak-products`, see `notebooks/weak/NOTES.md`)
 - After each one-tick jump, TELLURIUM glides smoothly toward a new level, either back or further. The market maker now rides that glide: it waits 20 ticks, takes 40 units in the glide direction, and flattens when the glide stalls.
 - TELLURIUM goes from 10,649 / 7,342 / 8,704 to **19,472 / 18,958 / 18,662**, positive every day and for every nearby setting. Under strict fills it holds 54.6k (the market maker alone drops to 5.1k).
+
+### 2026-10-30: AMETHYST capacity (`08_amethyst_capacity.py`)
+- **Question:** can AMETHYST make more? It's worth exactly 10,000, and every trade prints at the best bid or ask.
+- **Result:**
+  - We fill **100% of the 1,077 units** that traded over three days (430 trades).
+  - Our position never reaches ±50 (average |position| 13.6), so the Prosperity trick of clearing inventory at fair value has nothing to free up and changes nothing.
+  - A smaller cap loses a little (cap 25: 97.7% of volume, 1,582); leaning against inventory loses more (skew 2: 76.6%, 1,364).
+- **Why:** ~1.5 coins of edge × 1,077 units ≈ 1.6k is the ceiling under this fill rule, and we're at it.
+- **Decision:** no change; AMETHYST is done.
