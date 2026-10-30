@@ -35,13 +35,19 @@ STANDALONE_LIMITS = {"AMETHYST": 50, "TOFFEE_CAKE": 50, "PAPER_LANTERNS": 50, "T
 # anchor_span: if set, the anchor itself is re-estimated as a slow EMA of the mid starting at `anchor`.
 # flow_beta/flow_decay: shift fair value by recent signed aggressor volume (informed flow).
 # soft_cap: max |position| we build (the hard limit still applies).
+# glide (TELLURIUM): after a jump of >= J coins within 5 ticks, wait W ticks; if the price has moved
+#   >= gmin since the jump, take the full limit in that direction ("ride the glide") and hold until the
+#   last K-tick move stalls below `flat` (or after H ticks); then flatten ("take") or hand back to market
+#   making ("mm"). Market making runs whenever no glide trade is on. See notebooks/weak/NOTES.md.
 # take_edge=100 effectively disables taking. Choices are explained in notebooks/standalone/NOTES.md.
+STANDALONE_GLIDE = dict(J=60, W=20, gmin=15, K=20, flat=0.0, H=300, cool=50, exit="take")
 STANDALONE_PARAMS: Dict[str, dict] = {
     "AMETHYST":       dict(fair="fixed", value=10_000, take_edge=1, make_edge=1, skew=0),
     "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0,
                            anchor_span=2000, anchor_gate=20),  # gated adaptive anchor, notebooks/adaptive/NOTES.md
     "PAPER_LANTERNS": dict(fair="trend", span=20, slope_window=100, lead=100, take_edge=1, make_edge=1, skew=2),
-    "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15),
+    "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15,
+                           glide=STANDALONE_GLIDE),
     "JELLY":          dict(fair="mid", take_edge=100, make_edge=1, skew=0, soft_cap=3),
     "PEANUT_BUTTER":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=10),
 }
@@ -132,14 +138,62 @@ class StandaloneTrader:
             orders.append(Order(product, bid, -q))
             sell_cap -= q
 
-        # 2) join the touch, never closer to fair than make_edge
+        # 2) join the touch (or step `improve` ticks inside it), never closer to fair than make_edge
         best_bid, best_ask = max(depth.buy_orders), min(depth.sell_orders)
-        bid_px = int(min(best_bid, fair_adj - prm["make_edge"]) // 1)
-        ask_px = int(-((-max(best_ask, fair_adj + prm["make_edge"])) // 1))  # ceil
+        improve = prm.get("improve", 0)
+        bid_px = int(min(best_bid + improve, fair_adj - prm["make_edge"]) // 1)
+        ask_px = int(-((-max(best_ask - improve, fair_adj + prm["make_edge"])) // 1))  # ceil
         if buy_cap > 0:
             orders.append(Order(product, bid_px, buy_cap))
         if sell_cap > 0:
             orders.append(Order(product, ask_px, -sell_cap))
+        return orders
+
+    # ---------- glide overlay (TELLURIUM) ----------
+    def glide_signal(self, mid: float, pm: dict, g: dict, limit: int):
+        """Returns a target position while a glide trade is on, "exit" on the tick it ends, else None.
+        Uses its own tick counter, so it doesn't depend on timestamps resetting between days."""
+        gs = pm.setdefault("glide", {"hist": [], "tick": 0, "jump": None, "side": 0, "t_in": 0, "last_end": -10**9})
+        gs["tick"] += 1
+        t = gs["tick"]
+        hist = gs["hist"]
+        hist.append(mid)
+        if len(hist) > max(5, g["K"]) + 1:
+            hist.pop(0)
+        if gs["side"] != 0:
+            recent = mid - hist[-g["K"] - 1] if len(hist) > g["K"] else 0.0
+            if t - gs["t_in"] >= g["H"] or gs["side"] * recent < g["flat"]:
+                gs["side"], gs["jump"], gs["last_end"] = 0, None, t
+                return "exit"
+            return gs["side"] * limit
+        if len(hist) > 5 and abs(hist[-1] - hist[-6]) >= g["J"] and t - gs["last_end"] >= g["cool"]:
+            gs["jump"] = [t, mid]  # a new jump restarts the clock
+        if gs["jump"] is not None and t - gs["jump"][0] >= g["W"]:
+            move = mid - gs["jump"][1]
+            gs["jump"] = None
+            if abs(move) >= g["gmin"]:
+                gs["side"], gs["t_in"] = (1 if move > 0 else -1), t
+                return gs["side"] * limit
+        return None
+
+    @staticmethod
+    def take_to(product: str, depth: OrderDepth, position: int, target: int) -> List[Order]:
+        """Cross the book level by level toward `target`."""
+        diff, orders = target - position, []
+        if diff > 0:
+            for ask in sorted(depth.sell_orders):
+                if diff <= 0:
+                    break
+                q = min(diff, -depth.sell_orders[ask])
+                orders.append(Order(product, ask, q))
+                diff -= q
+        elif diff < 0:
+            for bid in sorted(depth.buy_orders, reverse=True):
+                if diff >= 0:
+                    break
+                q = min(-diff, depth.buy_orders[bid])
+                orders.append(Order(product, bid, -q))
+                diff += q
         return orders
 
     def run(self, state: TradingState):
@@ -149,8 +203,19 @@ class StandaloneTrader:
             depth = state.order_depths.get(product)
             if depth is None or not depth.buy_orders or not depth.sell_orders:
                 continue
-            fair = self.fair_value(product, depth, state, mem)
-            result[product] = self.make_orders(product, depth, state.position.get(product, 0), fair)
+            prm = self.params[product]
+            position = state.position.get(product, 0)
+            fair = self.fair_value(product, depth, state, mem)  # always run, so its memory stays current
+            if "glide" in prm:
+                mid = (max(depth.buy_orders) + min(depth.sell_orders)) / 2
+                sig = self.glide_signal(mid, mem[product], prm["glide"], STANDALONE_LIMITS[product])
+                if sig == "exit" and prm["glide"]["exit"] == "take":
+                    result[product] = self.take_to(product, depth, position, 0)
+                    continue
+                if sig is not None and sig != "exit":
+                    result[product] = self.take_to(product, depth, position, sig)
+                    continue
+            result[product] = self.make_orders(product, depth, position, fair)
         return result, 0, json.dumps(mem)
 
 
@@ -162,7 +227,9 @@ class StandaloneTrader:
 Findings (notebooks/pearls/NOTES.md):
   - The five pearl mids sum to 50,000 (std 5). PINK is the one that closes the gap:
     its future move ~ -k * (sum - 50,000), with k ~ 0.4 at 20 ticks, ~0.7 at 50, ~1.0 at 200.
-  - GOLDEN sits on plateaus (8000 / 7900 / 7800 / 7750) with +-0.5 quote noise.
+  - GOLDEN sits on plateaus (8000 / 7900 / 7800 / 7750) with +-0.5 quote noise, and moves between
+    them in a straight-line slide (~1-2 coins per tick for ~50 ticks). We market-make the plateau and
+    ride the slide (see notebooks/weak/NOTES.md).
   - Every trade prints at or through the touch, so we join the touch (see standalone notes).
 """
 
@@ -175,10 +242,13 @@ PEARLS_SUM_TARGET = 50_000
 # fair: "mid" | "plateau" (round to nearest `step` when within `snap`) | "sum" (mid - k * sum deviation)
 # Chosen from notebooks/pearls/02_param_sweep.py (worst training day, then checked on day 0).
 # WHITE/BLACK/BLUE have no edge yet; small soft_cap keeps them in the book for breadth at low risk.
+# slide: if the mid moves >= `move` coins over `L` ticks (GOLDEN only flickers +-0.5 on a plateau),
+#   take the full limit in that direction; exit when the last `K`-tick move drops below `flat` coins.
 PEARLS_PARAMS: Dict[str, dict] = {
     "WHITE_PEARLS":  dict(fair="mid", take_edge=100, make_edge=2, skew=0, soft_cap=5),
     "BLACK_PEARLS":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=5),
-    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20),
+    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20,
+                          slide=dict(move=3, L=5, K=10, flat=1.0)),  # ride slides, notebooks/weak/NOTES.md
     "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20,
                           sum_span=1000, sum_gate=10),  # gated adaptive sum target, notebooks/adaptive/NOTES.md
     "BLUE_PEARLS":   dict(fair="mid", take_edge=100, make_edge=3, skew=2, soft_cap=5),
@@ -243,18 +313,66 @@ class PearlsTrader:
             orders.append(Order(product, ask_px, -sell_cap))
         return orders
 
+    @staticmethod
+    def take_to(product: str, depth: OrderDepth, position: int, target: int) -> List[Order]:
+        """Cross the book level by level toward `target`."""
+        diff, orders = target - position, []
+        if diff > 0:
+            for ask in sorted(depth.sell_orders):
+                if diff <= 0:
+                    break
+                q = min(diff, -depth.sell_orders[ask])
+                orders.append(Order(product, ask, q))
+                diff -= q
+        elif diff < 0:
+            for bid in sorted(depth.buy_orders, reverse=True):
+                if diff >= 0:
+                    break
+                q = min(-diff, depth.buy_orders[bid])
+                orders.append(Order(product, bid, -q))
+                diff += q
+        return orders
+
+    def slide_target(self, mid: float, mem: dict, s: dict, limit: int):
+        """While a slide is on: target position. On the tick it ends: 0. Otherwise None."""
+        hist = mem.setdefault("hist", [])
+        hist.append(mid)
+        if len(hist) > max(s["L"], s["K"]) + 1:
+            hist.pop(0)
+        side = mem.get("side", 0)
+        if side != 0:
+            recent = mid - hist[-s["K"] - 1] if len(hist) > s["K"] else 0.0
+            if side * recent < s["flat"]:
+                mem["side"] = 0
+                return 0
+            return side * limit
+        if len(hist) > s["L"] and abs(hist[-1] - hist[-1 - s["L"]]) >= s["move"]:
+            mem["side"] = 1 if hist[-1] > hist[-1 - s["L"]] else -1
+            return mem["side"] * limit
+        return None
+
     def run(self, state: TradingState):
+        try:
+            memory = json.loads(state.traderData) if state.traderData else {}
+        except ValueError:
+            memory = {}
         depths = {p: state.order_depths[p] for p in PEARLS_PEARLS
                   if p in state.order_depths and state.order_depths[p].buy_orders and state.order_depths[p].sell_orders}
         mids = {p: _pearls_mid(d) for p, d in depths.items()}
-        mem = json.loads(state.traderData) if state.traderData else {}
         result = {}
         for product in self.params:
             if product not in depths:
                 continue
-            fair = self.fair_value(product, mids, mem)
-            result[product] = self.make_orders(product, depths[product], state.position.get(product, 0), fair)
-        return result, 0, json.dumps(mem)
+            prm = self.params[product]
+            position = state.position.get(product, 0)
+            if "slide" in prm:
+                target = self.slide_target(mids[product], memory.setdefault(product, {}), prm["slide"], PEARLS_LIMITS[product])
+                if target is not None:
+                    result[product] = self.take_to(product, depths[product], position, target)
+                    continue
+            fair = self.fair_value(product, mids, memory)
+            result[product] = self.make_orders(product, depths[product], position, fair)
+        return result, 0, json.dumps(memory)
 
 
 # =====================================================================================

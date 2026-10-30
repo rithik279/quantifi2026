@@ -64,3 +64,7 @@ Strategy: `src/strategies/pearls.py`.
 - **GOLDEN `skew` 5 → 2.** Skew 0 / 2 / 5 / 10 → 1.2k / 1.1k / 1.0k / −1.1k, so 5 sat next to a losing value. Result: 142 / −38 / 960.
 - **PINK heatmap (k × take_edge):** a diagonal ridge, so a stronger signal needs a higher take threshold. (0.5, 1), (0.75, 3) and (1.0, 5) are all ~27–28k, so the edge doesn't depend on one exact setting.
 - **Fill stress:** PINK is unaffected (28.0k → 27.8k with only through-price fills), because it earns by taking.
+
+### 2026-10-30: deeper pearl work (on `rithik/weak-products`, see `notebooks/weak/NOTES.md`)
+- **GOLDEN slides in a straight line between plateaus** (~50 ticks). Riding the slide lifts GOLDEN from 142 / −38 / 960 to **142 / 1,960 / 2,940**, with no false starts. Added to `pearls.py` as `PARAMS["GOLDEN_PEARLS"]["slide"]`. The pearls trader now keeps memory in `traderData`.
+- **WHITE and BLACK are predictable from the other pearls** (out-of-sample corr ~0.1 every day), and BLUE from its own momentum. But leaning quotes on it doesn't beat the spread, so they're unchanged.

@@ -3,7 +3,9 @@
 Findings (notebooks/pearls/NOTES.md):
   - The five pearl mids sum to 50,000 (std 5). PINK is the one that closes the gap:
     its future move ~ -k * (sum - 50,000), with k ~ 0.4 at 20 ticks, ~0.7 at 50, ~1.0 at 200.
-  - GOLDEN sits on plateaus (8000 / 7900 / 7800 / 7750) with +-0.5 quote noise.
+  - GOLDEN sits on plateaus (8000 / 7900 / 7800 / 7750) with +-0.5 quote noise, and moves between
+    them in a straight-line slide (~1-2 coins per tick for ~50 ticks). We market-make the plateau and
+    ride the slide (see notebooks/weak/NOTES.md).
   - Every trade prints at or through the touch, so we join the touch (see standalone notes).
 """
 
@@ -19,10 +21,13 @@ SUM_TARGET = 50_000
 # fair: "mid" | "plateau" (round to nearest `step` when within `snap`) | "sum" (mid - k * sum deviation)
 # Chosen from notebooks/pearls/02_param_sweep.py (worst training day, then checked on day 0).
 # WHITE/BLACK/BLUE have no edge yet; small soft_cap keeps them in the book for breadth at low risk.
+# slide: if the mid moves >= `move` coins over `L` ticks (GOLDEN only flickers +-0.5 on a plateau),
+#   take the full limit in that direction; exit when the last `K`-tick move drops below `flat` coins.
 PARAMS: Dict[str, dict] = {
     "WHITE_PEARLS":  dict(fair="mid", take_edge=100, make_edge=2, skew=0, soft_cap=5),
     "BLACK_PEARLS":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=5),
-    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20),
+    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20,
+                          slide=dict(move=3, L=5, K=10, flat=1.0)),  # ride slides, notebooks/weak/NOTES.md
     "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20,
                           sum_span=1000, sum_gate=10),  # gated adaptive sum target, notebooks/adaptive/NOTES.md
     "BLUE_PEARLS":   dict(fair="mid", take_edge=100, make_edge=3, skew=2, soft_cap=5),
@@ -87,15 +92,63 @@ class Trader:
             orders.append(Order(product, ask_px, -sell_cap))
         return orders
 
+    @staticmethod
+    def take_to(product: str, depth: OrderDepth, position: int, target: int) -> List[Order]:
+        """Cross the book level by level toward `target`."""
+        diff, orders = target - position, []
+        if diff > 0:
+            for ask in sorted(depth.sell_orders):
+                if diff <= 0:
+                    break
+                q = min(diff, -depth.sell_orders[ask])
+                orders.append(Order(product, ask, q))
+                diff -= q
+        elif diff < 0:
+            for bid in sorted(depth.buy_orders, reverse=True):
+                if diff >= 0:
+                    break
+                q = min(-diff, depth.buy_orders[bid])
+                orders.append(Order(product, bid, -q))
+                diff += q
+        return orders
+
+    def slide_target(self, mid: float, mem: dict, s: dict, limit: int):
+        """While a slide is on: target position. On the tick it ends: 0. Otherwise None."""
+        hist = mem.setdefault("hist", [])
+        hist.append(mid)
+        if len(hist) > max(s["L"], s["K"]) + 1:
+            hist.pop(0)
+        side = mem.get("side", 0)
+        if side != 0:
+            recent = mid - hist[-s["K"] - 1] if len(hist) > s["K"] else 0.0
+            if side * recent < s["flat"]:
+                mem["side"] = 0
+                return 0
+            return side * limit
+        if len(hist) > s["L"] and abs(hist[-1] - hist[-1 - s["L"]]) >= s["move"]:
+            mem["side"] = 1 if hist[-1] > hist[-1 - s["L"]] else -1
+            return mem["side"] * limit
+        return None
+
     def run(self, state: TradingState):
+        try:
+            memory = json.loads(state.traderData) if state.traderData else {}
+        except ValueError:
+            memory = {}
         depths = {p: state.order_depths[p] for p in PEARLS
                   if p in state.order_depths and state.order_depths[p].buy_orders and state.order_depths[p].sell_orders}
         mids = {p: _mid(d) for p, d in depths.items()}
-        mem = json.loads(state.traderData) if state.traderData else {}
         result = {}
         for product in self.params:
             if product not in depths:
                 continue
-            fair = self.fair_value(product, mids, mem)
-            result[product] = self.make_orders(product, depths[product], state.position.get(product, 0), fair)
-        return result, 0, json.dumps(mem)
+            prm = self.params[product]
+            position = state.position.get(product, 0)
+            if "slide" in prm:
+                target = self.slide_target(mids[product], memory.setdefault(product, {}), prm["slide"], LIMITS[product])
+                if target is not None:
+                    result[product] = self.take_to(product, depths[product], position, target)
+                    continue
+            fair = self.fair_value(product, mids, memory)
+            result[product] = self.make_orders(product, depths[product], position, fair)
+        return result, 0, json.dumps(memory)
