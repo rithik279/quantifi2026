@@ -32,12 +32,14 @@ STANDALONE_LIMITS = {"AMETHYST": 50, "TOFFEE_CAKE": 50, "PAPER_LANTERNS": 50, "T
 # fair: "fixed" uses `value`; "ema" uses an EMA of the mid with `span`; "mid" uses the current mid;
 #       "trend" = EMA + its slope over `slope_window` ticks, extrapolated `lead` ticks ahead.
 # anchor/anchor_w: pull the fair value toward a long-run level (mean reversion).
+# anchor_span: if set, the anchor itself is re-estimated as a slow EMA of the mid starting at `anchor`.
 # flow_beta/flow_decay: shift fair value by recent signed aggressor volume (informed flow).
 # soft_cap: max |position| we build (the hard limit still applies).
 # take_edge=100 effectively disables taking. Choices are explained in notebooks/standalone/NOTES.md.
 STANDALONE_PARAMS: Dict[str, dict] = {
     "AMETHYST":       dict(fair="fixed", value=10_000, take_edge=1, make_edge=1, skew=0),
-    "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0),
+    "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0,
+                           anchor_span=2000, anchor_gate=20),  # gated adaptive anchor, notebooks/adaptive/NOTES.md
     "PAPER_LANTERNS": dict(fair="trend", span=20, slope_window=100, lead=100, take_edge=1, make_edge=1, skew=2),
     "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15),
     "JELLY":          dict(fair="mid", take_edge=100, make_edge=1, skew=0, soft_cap=3),
@@ -76,7 +78,18 @@ class StandaloneTrader:
             fair = mid
 
         if "anchor" in prm:
-            fair = (1 - prm["anchor_w"]) * fair + prm["anchor_w"] * prm["anchor"]
+            anchor = prm["anchor"]
+            if prm.get("anchor_span"):
+                # adaptive anchor: a slow EMA of the mid that STARTS at the historical value, so it
+                # stays near 5,000 if that still holds but follows the centre if it has moved
+                a = 2 / (prm["anchor_span"] + 1)
+                est = a * mid + (1 - a) * pm.get("anchor_est", prm["anchor"])
+                pm["anchor_est"] = est
+                # anchor_gate: keep the historical value until the estimate has clearly moved away
+                # (a change detector), so nothing is lost while the old anchor still holds
+                gate = prm.get("anchor_gate", 0)
+                anchor = est if abs(est - prm["anchor"]) > gate else prm["anchor"]
+            fair = (1 - prm["anchor_w"]) * fair + prm["anchor_w"] * anchor
 
         if "flow_beta" in prm:
             # sign last tick's market trades against last tick's mid
@@ -166,7 +179,8 @@ PEARLS_PARAMS: Dict[str, dict] = {
     "WHITE_PEARLS":  dict(fair="mid", take_edge=100, make_edge=2, skew=0, soft_cap=5),
     "BLACK_PEARLS":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=5),
     "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20),
-    "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20),
+    "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20,
+                          sum_span=1000, sum_gate=10),  # gated adaptive sum target, notebooks/adaptive/NOTES.md
     "BLUE_PEARLS":   dict(fair="mid", take_edge=100, make_edge=3, skew=2, soft_cap=5),
 }
 
@@ -179,15 +193,24 @@ class PearlsTrader:
     def __init__(self, params: Dict[str, dict] = None):
         self.params = params if params is not None else PEARLS_PARAMS
 
-    def fair_value(self, product: str, mids: Dict[str, float]) -> float:
+    def fair_value(self, product: str, mids: Dict[str, float], mem: dict) -> float:
         prm = self.params[product]
         mid = mids[product]
         if prm["fair"] == "plateau":
             level = round(mid / prm["step"]) * prm["step"]
             return level if abs(mid - level) <= prm["snap"] else mid
         if prm["fair"] == "sum" and len(mids) == len(PEARLS_PEARLS):
-            dev = sum(mids.values()) - PEARLS_SUM_TARGET
-            return mid - prm["k"] * dev
+            total = sum(mids.values())
+            target = PEARLS_SUM_TARGET
+            if prm.get("sum_span"):
+                # adaptive target: slow EMA of the sum starting at 50,000. Deviations last ~25 ticks,
+                # so a slow EMA barely absorbs the signal but follows a genuinely new target.
+                est = mem.get("sum_target", PEARLS_SUM_TARGET)
+                a = 2 / (prm["sum_span"] + 1)
+                mem["sum_target"] = a * total + (1 - a) * est
+                # sum_gate: keep 50,000 until the estimate has clearly moved away (change detector)
+                target = est if abs(est - PEARLS_SUM_TARGET) > prm.get("sum_gate", 0) else PEARLS_SUM_TARGET
+            return mid - prm["k"] * (total - target)
         return mid
 
     def make_orders(self, product: str, depth: OrderDepth, position: int, fair: float) -> List[Order]:
@@ -224,13 +247,14 @@ class PearlsTrader:
         depths = {p: state.order_depths[p] for p in PEARLS_PEARLS
                   if p in state.order_depths and state.order_depths[p].buy_orders and state.order_depths[p].sell_orders}
         mids = {p: _pearls_mid(d) for p, d in depths.items()}
+        mem = json.loads(state.traderData) if state.traderData else {}
         result = {}
         for product in self.params:
             if product not in depths:
                 continue
-            fair = self.fair_value(product, mids)
+            fair = self.fair_value(product, mids, mem)
             result[product] = self.make_orders(product, depths[product], state.position.get(product, 0), fair)
-        return result, 0, ""
+        return result, 0, json.dumps(mem)
 
 
 # =====================================================================================
@@ -356,6 +380,10 @@ OPTIONS_PARAMS = dict(
     hedge=True,       # wide band: a tight band (10) just pays LYCHEE's spread; see NOTES.md
     hedge_band=60,    # rebalance LYCHEE when |target - position| exceeds this (cuts mean |delta| 101 -> 35)
     min_price=3.0,    # skip vouchers cheaper than this (tick size dominates)
+    take_mode="scaled",  # take threshold = max(take_min, take_k x recent std of (price - fair)); "fixed" = take_edge
+    take_k=0.8,
+    take_min=2.0,
+    resid_span=1000,  # ticks: EMA span for the variance of (price - fair) per voucher
 )
 
 
@@ -405,7 +433,7 @@ class OptionsTrader:
     def tte(self, timestamp: int) -> float:
         return OPTIONS_EXPIRY_DAYS_AT_DAY_MINUS_2 - (self.day + 2) - timestamp / 1_000_000
 
-    def quote(self, product: str, depth: OrderDepth, position: int, fair: float) -> List[Order]:
+    def quote(self, product: str, depth: OrderDepth, position: int, fair: float, take_edge: float) -> List[Order]:
         prm = self.params
         limit = OPTIONS_LIMITS[product]
         cap = min(limit, prm["soft_cap"])
@@ -413,12 +441,12 @@ class OptionsTrader:
         buy_cap, sell_cap = max(0, cap - position), max(0, cap + position)
         orders: List[Order] = []
         for ask in sorted(depth.sell_orders):
-            if buy_cap <= 0 or ask > fair_adj - prm["take_edge"]:
+            if buy_cap <= 0 or ask > fair_adj - take_edge:
                 break
             q = min(buy_cap, -depth.sell_orders[ask])
             orders.append(Order(product, ask, q)); buy_cap -= q
         for bid in sorted(depth.buy_orders, reverse=True):
-            if sell_cap <= 0 or bid < fair_adj + prm["take_edge"]:
+            if sell_cap <= 0 or bid < fair_adj + take_edge:
                 break
             q = min(sell_cap, depth.buy_orders[bid])
             orders.append(Order(product, bid, -q)); sell_cap -= q
@@ -462,7 +490,15 @@ class OptionsTrader:
             if vmid < prm["min_price"]:
                 continue
             fair = options_bs_call(S, K, T, iv)
-            result[product] = self.quote(product, depth, pos, fair)
+            take = prm["take_edge"]
+            if prm["take_mode"] == "scaled":
+                # how big are this voucher's wobbles right now? take only the unusually large ones
+                rv = mem.setdefault("rv", {})
+                resid = vmid - fair
+                a = 2 / (prm["resid_span"] + 1)
+                rv[product] = a * resid * resid + (1 - a) * rv.get(product, resid * resid)
+                take = max(prm["take_min"], prm["take_k"] * math.sqrt(rv[product]))
+            result[product] = self.quote(product, depth, pos, fair, take)
 
         if prm["hedge"]:
             pos_u = state.position.get(OPTIONS_UNDERLYING, 0)

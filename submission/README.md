@@ -27,6 +27,8 @@ Upload these files **in this order**. All of them import only `datamodel`, `json
 
 Upload from the `rithik/robustness` branch: it has the latest parameters and the combined file.
 
+**Adaptive version (branch `rithik/adaptive`):** this branch's `trader.py` adds a gated adaptive TOFFEE anchor, a gated adaptive pearl-sum target and a scaled options threshold. Locally: **112,872 / 116,264 / 97,852 (326,988)**, the same total as `best-316k`, but far more robust if the judges change those facts (see `notebooks/adaptive/NOTES.md`). Not yet checked on the site.
+
 **Results so far (2026-10-30):** #6 `submission/trader.py` scored **316,088** on the official site, versus 326,594 locally (3.2% lower). Our backtester is well calibrated. Uploads #2–#5 would show which group accounts for the gap.
 
 For each upload, write down:

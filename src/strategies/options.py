@@ -34,6 +34,10 @@ PARAMS = dict(
     hedge=True,       # wide band: a tight band (10) just pays LYCHEE's spread; see NOTES.md
     hedge_band=60,    # rebalance LYCHEE when |target - position| exceeds this (cuts mean |delta| 101 -> 35)
     min_price=3.0,    # skip vouchers cheaper than this (tick size dominates)
+    take_mode="scaled",  # take threshold = max(take_min, take_k x recent std of (price - fair)); "fixed" = take_edge
+    take_k=0.8,
+    take_min=2.0,
+    resid_span=1000,  # ticks: EMA span for the variance of (price - fair) per voucher
 )
 
 
@@ -83,7 +87,7 @@ class Trader:
     def tte(self, timestamp: int) -> float:
         return EXPIRY_DAYS_AT_DAY_MINUS_2 - (self.day + 2) - timestamp / 1_000_000
 
-    def quote(self, product: str, depth: OrderDepth, position: int, fair: float) -> List[Order]:
+    def quote(self, product: str, depth: OrderDepth, position: int, fair: float, take_edge: float) -> List[Order]:
         prm = self.params
         limit = LIMITS[product]
         cap = min(limit, prm["soft_cap"])
@@ -91,12 +95,12 @@ class Trader:
         buy_cap, sell_cap = max(0, cap - position), max(0, cap + position)
         orders: List[Order] = []
         for ask in sorted(depth.sell_orders):
-            if buy_cap <= 0 or ask > fair_adj - prm["take_edge"]:
+            if buy_cap <= 0 or ask > fair_adj - take_edge:
                 break
             q = min(buy_cap, -depth.sell_orders[ask])
             orders.append(Order(product, ask, q)); buy_cap -= q
         for bid in sorted(depth.buy_orders, reverse=True):
-            if sell_cap <= 0 or bid < fair_adj + prm["take_edge"]:
+            if sell_cap <= 0 or bid < fair_adj + take_edge:
                 break
             q = min(sell_cap, depth.buy_orders[bid])
             orders.append(Order(product, bid, -q)); sell_cap -= q
@@ -140,7 +144,15 @@ class Trader:
             if vmid < prm["min_price"]:
                 continue
             fair = bs_call(S, K, T, iv)
-            result[product] = self.quote(product, depth, pos, fair)
+            take = prm["take_edge"]
+            if prm["take_mode"] == "scaled":
+                # how big are this voucher's wobbles right now? take only the unusually large ones
+                rv = mem.setdefault("rv", {})
+                resid = vmid - fair
+                a = 2 / (prm["resid_span"] + 1)
+                rv[product] = a * resid * resid + (1 - a) * rv.get(product, resid * resid)
+                take = max(prm["take_min"], prm["take_k"] * math.sqrt(rv[product]))
+            result[product] = self.quote(product, depth, pos, fair, take)
 
         if prm["hedge"]:
             pos_u = state.position.get(UNDERLYING, 0)

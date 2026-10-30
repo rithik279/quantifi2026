@@ -23,7 +23,8 @@ PARAMS: Dict[str, dict] = {
     "WHITE_PEARLS":  dict(fair="mid", take_edge=100, make_edge=2, skew=0, soft_cap=5),
     "BLACK_PEARLS":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=5),
     "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20),
-    "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20),
+    "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20,
+                          sum_span=1000, sum_gate=10),  # gated adaptive sum target, notebooks/adaptive/NOTES.md
     "BLUE_PEARLS":   dict(fair="mid", take_edge=100, make_edge=3, skew=2, soft_cap=5),
 }
 
@@ -36,15 +37,24 @@ class Trader:
     def __init__(self, params: Dict[str, dict] = None):
         self.params = params if params is not None else PARAMS
 
-    def fair_value(self, product: str, mids: Dict[str, float]) -> float:
+    def fair_value(self, product: str, mids: Dict[str, float], mem: dict) -> float:
         prm = self.params[product]
         mid = mids[product]
         if prm["fair"] == "plateau":
             level = round(mid / prm["step"]) * prm["step"]
             return level if abs(mid - level) <= prm["snap"] else mid
         if prm["fair"] == "sum" and len(mids) == len(PEARLS):
-            dev = sum(mids.values()) - SUM_TARGET
-            return mid - prm["k"] * dev
+            total = sum(mids.values())
+            target = SUM_TARGET
+            if prm.get("sum_span"):
+                # adaptive target: slow EMA of the sum starting at 50,000. Deviations last ~25 ticks,
+                # so a slow EMA barely absorbs the signal but follows a genuinely new target.
+                est = mem.get("sum_target", SUM_TARGET)
+                a = 2 / (prm["sum_span"] + 1)
+                mem["sum_target"] = a * total + (1 - a) * est
+                # sum_gate: keep 50,000 until the estimate has clearly moved away (change detector)
+                target = est if abs(est - SUM_TARGET) > prm.get("sum_gate", 0) else SUM_TARGET
+            return mid - prm["k"] * (total - target)
         return mid
 
     def make_orders(self, product: str, depth: OrderDepth, position: int, fair: float) -> List[Order]:
@@ -81,10 +91,11 @@ class Trader:
         depths = {p: state.order_depths[p] for p in PEARLS
                   if p in state.order_depths and state.order_depths[p].buy_orders and state.order_depths[p].sell_orders}
         mids = {p: _mid(d) for p, d in depths.items()}
+        mem = json.loads(state.traderData) if state.traderData else {}
         result = {}
         for product in self.params:
             if product not in depths:
                 continue
-            fair = self.fair_value(product, mids)
+            fair = self.fair_value(product, mids, mem)
             result[product] = self.make_orders(product, depths[product], state.position.get(product, 0), fair)
-        return result, 0, ""
+        return result, 0, json.dumps(mem)

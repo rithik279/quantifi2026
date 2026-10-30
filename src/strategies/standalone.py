@@ -20,12 +20,14 @@ LIMITS = {"AMETHYST": 50, "TOFFEE_CAKE": 50, "PAPER_LANTERNS": 50, "TELLURIUM": 
 # fair: "fixed" uses `value`; "ema" uses an EMA of the mid with `span`; "mid" uses the current mid;
 #       "trend" = EMA + its slope over `slope_window` ticks, extrapolated `lead` ticks ahead.
 # anchor/anchor_w: pull the fair value toward a long-run level (mean reversion).
+# anchor_span: if set, the anchor itself is re-estimated as a slow EMA of the mid starting at `anchor`.
 # flow_beta/flow_decay: shift fair value by recent signed aggressor volume (informed flow).
 # soft_cap: max |position| we build (the hard limit still applies).
 # take_edge=100 effectively disables taking. Choices are explained in notebooks/standalone/NOTES.md.
 PARAMS: Dict[str, dict] = {
     "AMETHYST":       dict(fair="fixed", value=10_000, take_edge=1, make_edge=1, skew=0),
-    "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0),
+    "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0,
+                           anchor_span=2000, anchor_gate=20),  # gated adaptive anchor, notebooks/adaptive/NOTES.md
     "PAPER_LANTERNS": dict(fair="trend", span=20, slope_window=100, lead=100, take_edge=1, make_edge=1, skew=2),
     "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15),
     "JELLY":          dict(fair="mid", take_edge=100, make_edge=1, skew=0, soft_cap=3),
@@ -64,7 +66,18 @@ class Trader:
             fair = mid
 
         if "anchor" in prm:
-            fair = (1 - prm["anchor_w"]) * fair + prm["anchor_w"] * prm["anchor"]
+            anchor = prm["anchor"]
+            if prm.get("anchor_span"):
+                # adaptive anchor: a slow EMA of the mid that STARTS at the historical value, so it
+                # stays near 5,000 if that still holds but follows the centre if it has moved
+                a = 2 / (prm["anchor_span"] + 1)
+                est = a * mid + (1 - a) * pm.get("anchor_est", prm["anchor"])
+                pm["anchor_est"] = est
+                # anchor_gate: keep the historical value until the estimate has clearly moved away
+                # (a change detector), so nothing is lost while the old anchor still holds
+                gate = prm.get("anchor_gate", 0)
+                anchor = est if abs(est - prm["anchor"]) > gate else prm["anchor"]
+            fair = (1 - prm["anchor_w"]) * fair + prm["anchor_w"] * anchor
 
         if "flow_beta" in prm:
             # sign last tick's market trades against last tick's mid

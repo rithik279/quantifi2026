@@ -1,0 +1,185 @@
+unit,variant,scenario,total,worst_day
+TOFFEE_CAKE,"fixed 5,000",real,70099.0,21245.0
+TOFFEE_CAKE,"fixed 5,000",toffee_+25,26588.0,7952.0
+TOFFEE_CAKE,"fixed 5,000",toffee_+50,3896.0,-2154.0
+TOFFEE_CAKE,"fixed 5,000",toffee_-50,-253.0,-1522.0
+TOFFEE_CAKE,"fixed 5,000",toffee_+50_midday,31988.0,8934.0
+TOFFEE_CAKE,"fixed 5,000",toffee_drift_+100,3933.0,-1102.0
+TOFFEE_CAKE,"fixed 5,000",mirror,70099.0,21245.0
+TOFFEE_CAKE,"fixed 5,000",vol_x0.6,53064.0,16390.0
+TOFFEE_CAKE,"fixed 5,000",vol_x1.5,152452.0,49253.0
+TOFFEE_CAKE,"fixed 5,000",bootstrap_1,82613.0,21875.0
+TOFFEE_CAKE,"fixed 5,000",bootstrap_2,78390.0,22853.0
+TOFFEE_CAKE,"fixed 5,000",bootstrap_3,68130.0,20893.0
+TOFFEE_CAKE,always adaptive span 4000,real,64456.0,17816.0
+TOFFEE_CAKE,always adaptive span 4000,toffee_+25,66999.0,19038.0
+TOFFEE_CAKE,always adaptive span 4000,toffee_+50,64465.0,19746.0
+TOFFEE_CAKE,always adaptive span 4000,toffee_-50,43417.0,11938.0
+TOFFEE_CAKE,always adaptive span 4000,toffee_+50_midday,60014.5,15272.0
+TOFFEE_CAKE,always adaptive span 4000,toffee_drift_+100,50692.0,10375.0
+TOFFEE_CAKE,always adaptive span 4000,mirror,64456.0,17816.0
+TOFFEE_CAKE,always adaptive span 4000,vol_x0.6,47907.5,13791.0
+TOFFEE_CAKE,always adaptive span 4000,vol_x1.5,149714.0,46354.0
+TOFFEE_CAKE,always adaptive span 4000,bootstrap_1,77543.0,15437.0
+TOFFEE_CAKE,always adaptive span 4000,bootstrap_2,64153.0,20014.0
+TOFFEE_CAKE,always adaptive span 4000,bootstrap_3,56766.0,13439.0
+TOFFEE_CAKE,span 2000 gate 10,real,60759.0,17381.0
+TOFFEE_CAKE,span 2000 gate 10,toffee_+25,64977.0,19289.0
+TOFFEE_CAKE,span 2000 gate 10,toffee_+50,59301.0,19651.0
+TOFFEE_CAKE,span 2000 gate 10,toffee_-50,53407.0,14560.0
+TOFFEE_CAKE,span 2000 gate 10,toffee_+50_midday,53071.0,15438.0
+TOFFEE_CAKE,span 2000 gate 10,toffee_drift_+100,64805.0,16190.0
+TOFFEE_CAKE,span 2000 gate 10,mirror,60759.0,17381.0
+TOFFEE_CAKE,span 2000 gate 10,vol_x0.6,44440.0,12934.0
+TOFFEE_CAKE,span 2000 gate 10,vol_x1.5,139559.0,43766.0
+TOFFEE_CAKE,span 2000 gate 10,bootstrap_1,79752.0,20276.0
+TOFFEE_CAKE,span 2000 gate 10,bootstrap_2,70274.0,20449.0
+TOFFEE_CAKE,span 2000 gate 10,bootstrap_3,60835.0,18688.0
+TOFFEE_CAKE,span 2000 gate 15,real,68652.0,21245.0
+TOFFEE_CAKE,span 2000 gate 15,toffee_+25,60767.0,19289.0
+TOFFEE_CAKE,span 2000 gate 15,toffee_+50,59301.0,19651.0
+TOFFEE_CAKE,span 2000 gate 15,toffee_-50,53407.0,14560.0
+TOFFEE_CAKE,span 2000 gate 15,toffee_+50_midday,58012.0,16147.0
+TOFFEE_CAKE,span 2000 gate 15,toffee_drift_+100,58558.0,14825.0
+TOFFEE_CAKE,span 2000 gate 15,mirror,68652.0,21245.0
+TOFFEE_CAKE,span 2000 gate 15,vol_x0.6,51404.0,16390.0
+TOFFEE_CAKE,span 2000 gate 15,vol_x1.5,151074.0,47725.0
+TOFFEE_CAKE,span 2000 gate 15,bootstrap_1,81474.0,22183.0
+TOFFEE_CAKE,span 2000 gate 15,bootstrap_2,73317.0,22853.0
+TOFFEE_CAKE,span 2000 gate 15,bootstrap_3,62747.0,18154.0
+TOFFEE_CAKE,span 2000 gate 20,real,70099.0,21245.0
+TOFFEE_CAKE,span 2000 gate 20,toffee_+25,51001.0,16094.0
+TOFFEE_CAKE,span 2000 gate 20,toffee_+50,58051.0,18569.0
+TOFFEE_CAKE,span 2000 gate 20,toffee_-50,53407.0,14560.0
+TOFFEE_CAKE,span 2000 gate 20,toffee_+50_midday,58012.0,16147.0
+TOFFEE_CAKE,span 2000 gate 20,toffee_drift_+100,58760.0,15027.0
+TOFFEE_CAKE,span 2000 gate 20,mirror,70099.0,21245.0
+TOFFEE_CAKE,span 2000 gate 20,vol_x0.6,53064.0,16390.0
+TOFFEE_CAKE,span 2000 gate 20,vol_x1.5,152452.0,49253.0
+TOFFEE_CAKE,span 2000 gate 20,bootstrap_1,80845.0,20107.0
+TOFFEE_CAKE,span 2000 gate 20,bootstrap_2,77007.0,22853.0
+TOFFEE_CAKE,span 2000 gate 20,bootstrap_3,65391.0,18154.0
+TOFFEE_CAKE,span 2000 gate 25,real,70099.0,21245.0
+TOFFEE_CAKE,span 2000 gate 25,toffee_+25,38272.0,9399.0
+TOFFEE_CAKE,span 2000 gate 25,toffee_+50,57261.0,17779.0
+TOFFEE_CAKE,span 2000 gate 25,toffee_-50,53407.0,14560.0
+TOFFEE_CAKE,span 2000 gate 25,toffee_+50_midday,57874.0,16081.0
+TOFFEE_CAKE,span 2000 gate 25,toffee_drift_+100,57476.0,15027.0
+TOFFEE_CAKE,span 2000 gate 25,mirror,70099.0,21245.0
+TOFFEE_CAKE,span 2000 gate 25,vol_x0.6,53064.0,16390.0
+TOFFEE_CAKE,span 2000 gate 25,vol_x1.5,152452.0,49253.0
+TOFFEE_CAKE,span 2000 gate 25,bootstrap_1,82613.0,21875.0
+TOFFEE_CAKE,span 2000 gate 25,bootstrap_2,78390.0,22853.0
+TOFFEE_CAKE,span 2000 gate 25,bootstrap_3,68130.0,20893.0
+TOFFEE_CAKE,span 4000 gate 10,real,69042.0,21245.0
+TOFFEE_CAKE,span 4000 gate 10,toffee_+25,64056.0,19092.0
+TOFFEE_CAKE,span 4000 gate 10,toffee_+50,64338.0,19619.0
+TOFFEE_CAKE,span 4000 gate 10,toffee_-50,43417.0,11938.0
+TOFFEE_CAKE,span 4000 gate 10,toffee_+50_midday,61406.5,16555.0
+TOFFEE_CAKE,span 4000 gate 10,toffee_drift_+100,47286.0,11034.0
+TOFFEE_CAKE,span 4000 gate 10,mirror,69042.0,21245.0
+TOFFEE_CAKE,span 4000 gate 10,vol_x0.6,51863.0,16390.0
+TOFFEE_CAKE,span 4000 gate 10,vol_x1.5,151742.0,49253.0
+TOFFEE_CAKE,span 4000 gate 10,bootstrap_1,79121.0,19346.0
+TOFFEE_CAKE,span 4000 gate 10,bootstrap_2,73243.0,22853.0
+TOFFEE_CAKE,span 4000 gate 10,bootstrap_3,64875.0,18194.0
+TOFFEE_CAKE,span 4000 gate 15,real,70099.0,21245.0
+TOFFEE_CAKE,span 4000 gate 15,toffee_+25,62610.0,19092.0
+TOFFEE_CAKE,span 4000 gate 15,toffee_+50,59886.0,18433.0
+TOFFEE_CAKE,span 4000 gate 15,toffee_-50,43417.0,11938.0
+TOFFEE_CAKE,span 4000 gate 15,toffee_+50_midday,61370.5,16519.0
+TOFFEE_CAKE,span 4000 gate 15,toffee_drift_+100,46771.0,11034.0
+TOFFEE_CAKE,span 4000 gate 15,mirror,70099.0,21245.0
+TOFFEE_CAKE,span 4000 gate 15,vol_x0.6,53064.0,16390.0
+TOFFEE_CAKE,span 4000 gate 15,vol_x1.5,152452.0,49253.0
+TOFFEE_CAKE,span 4000 gate 15,bootstrap_1,79914.0,19176.0
+TOFFEE_CAKE,span 4000 gate 15,bootstrap_2,77008.0,22853.0
+TOFFEE_CAKE,span 4000 gate 15,bootstrap_3,69207.0,21970.0
+TOFFEE_CAKE,span 4000 gate 20,real,70099.0,21245.0
+TOFFEE_CAKE,span 4000 gate 20,toffee_+25,54769.0,15303.0
+TOFFEE_CAKE,span 4000 gate 20,toffee_+50,59886.0,18433.0
+TOFFEE_CAKE,span 4000 gate 20,toffee_-50,43417.0,11938.0
+TOFFEE_CAKE,span 4000 gate 20,toffee_+50_midday,58728.5,16519.0
+TOFFEE_CAKE,span 4000 gate 20,toffee_drift_+100,40463.0,6908.0
+TOFFEE_CAKE,span 4000 gate 20,mirror,70099.0,21245.0
+TOFFEE_CAKE,span 4000 gate 20,vol_x0.6,53064.0,16390.0
+TOFFEE_CAKE,span 4000 gate 20,vol_x1.5,152452.0,49253.0
+TOFFEE_CAKE,span 4000 gate 20,bootstrap_1,82613.0,21875.0
+TOFFEE_CAKE,span 4000 gate 20,bootstrap_2,78390.0,22853.0
+TOFFEE_CAKE,span 4000 gate 20,bootstrap_3,68130.0,20893.0
+TOFFEE_CAKE,span 4000 gate 25,real,70099.0,21245.0
+TOFFEE_CAKE,span 4000 gate 25,toffee_+25,41629.0,9129.0
+TOFFEE_CAKE,span 4000 gate 25,toffee_+50,59886.0,18433.0
+TOFFEE_CAKE,span 4000 gate 25,toffee_-50,40863.0,11938.0
+TOFFEE_CAKE,span 4000 gate 25,toffee_+50_midday,58683.5,16519.0
+TOFFEE_CAKE,span 4000 gate 25,toffee_drift_+100,38484.0,6908.0
+TOFFEE_CAKE,span 4000 gate 25,mirror,70099.0,21245.0
+TOFFEE_CAKE,span 4000 gate 25,vol_x0.6,53064.0,16390.0
+TOFFEE_CAKE,span 4000 gate 25,vol_x1.5,152452.0,49253.0
+TOFFEE_CAKE,span 4000 gate 25,bootstrap_1,82613.0,21875.0
+TOFFEE_CAKE,span 4000 gate 25,bootstrap_2,78390.0,22853.0
+TOFFEE_CAKE,span 4000 gate 25,bootstrap_3,68130.0,20893.0
+PINK_PEARLS,"fixed 50,000",real,28048.0,8930.0
+PINK_PEARLS,"fixed 50,000",pearls_sum_+100,3422.0,-1662.0
+PINK_PEARLS,"fixed 50,000",pearls_sum_+100_midday,16626.0,3797.0
+PINK_PEARLS,"fixed 50,000",mirror,28048.0,8930.0
+PINK_PEARLS,"fixed 50,000",vol_x0.6,21258.0,6295.0
+PINK_PEARLS,"fixed 50,000",bootstrap_1,32334.5,8778.5
+PINK_PEARLS,"fixed 50,000",bootstrap_2,32773.0,9204.0
+PINK_PEARLS,"fixed 50,000",bootstrap_3,29940.0,8573.0
+PINK_PEARLS,always adaptive span 1000,real,26717.0,8364.0
+PINK_PEARLS,always adaptive span 1000,pearls_sum_+100,21204.0,5883.0
+PINK_PEARLS,always adaptive span 1000,pearls_sum_+100_midday,23173.0,5330.0
+PINK_PEARLS,always adaptive span 1000,mirror,26717.0,8364.0
+PINK_PEARLS,always adaptive span 1000,vol_x0.6,16464.0,4517.0
+PINK_PEARLS,always adaptive span 1000,bootstrap_1,30922.0,7373.0
+PINK_PEARLS,always adaptive span 1000,bootstrap_2,29495.0,6757.0
+PINK_PEARLS,always adaptive span 1000,bootstrap_3,35406.0,10260.0
+PINK_PEARLS,span 1000 gate 5,real,28048.0,8930.0
+PINK_PEARLS,span 1000 gate 5,pearls_sum_+100,21204.0,5883.0
+PINK_PEARLS,span 1000 gate 5,pearls_sum_+100_midday,23621.0,5451.0
+PINK_PEARLS,span 1000 gate 5,mirror,28048.0,8930.0
+PINK_PEARLS,span 1000 gate 5,vol_x0.6,21258.0,6295.0
+PINK_PEARLS,span 1000 gate 5,bootstrap_1,32334.5,8778.5
+PINK_PEARLS,span 1000 gate 5,bootstrap_2,32773.0,9204.0
+PINK_PEARLS,span 1000 gate 5,bootstrap_3,29940.0,8573.0
+PINK_PEARLS,span 1000 gate 10,real,28048.0,8930.0
+PINK_PEARLS,span 1000 gate 10,pearls_sum_+100,21204.0,5883.0
+PINK_PEARLS,span 1000 gate 10,pearls_sum_+100_midday,23621.0,5451.0
+PINK_PEARLS,span 1000 gate 10,mirror,28048.0,8930.0
+PINK_PEARLS,span 1000 gate 10,vol_x0.6,21258.0,6295.0
+PINK_PEARLS,span 1000 gate 10,bootstrap_1,32334.5,8778.5
+PINK_PEARLS,span 1000 gate 10,bootstrap_2,32773.0,9204.0
+PINK_PEARLS,span 1000 gate 10,bootstrap_3,29940.0,8573.0
+PINK_PEARLS,span 1000 gate 20,real,28048.0,8930.0
+PINK_PEARLS,span 1000 gate 20,pearls_sum_+100,21204.0,5883.0
+PINK_PEARLS,span 1000 gate 20,pearls_sum_+100_midday,23621.0,5451.0
+PINK_PEARLS,span 1000 gate 20,mirror,28048.0,8930.0
+PINK_PEARLS,span 1000 gate 20,vol_x0.6,21258.0,6295.0
+PINK_PEARLS,span 1000 gate 20,bootstrap_1,32334.5,8778.5
+PINK_PEARLS,span 1000 gate 20,bootstrap_2,32773.0,9204.0
+PINK_PEARLS,span 1000 gate 20,bootstrap_3,29940.0,8573.0
+PINK_PEARLS,span 2000 gate 5,real,28048.0,8930.0
+PINK_PEARLS,span 2000 gate 5,pearls_sum_+100,16642.0,3998.0
+PINK_PEARLS,span 2000 gate 5,pearls_sum_+100_midday,20954.0,4660.0
+PINK_PEARLS,span 2000 gate 5,mirror,28048.0,8930.0
+PINK_PEARLS,span 2000 gate 5,vol_x0.6,21258.0,6295.0
+PINK_PEARLS,span 2000 gate 5,bootstrap_1,32334.5,8778.5
+PINK_PEARLS,span 2000 gate 5,bootstrap_2,32773.0,9204.0
+PINK_PEARLS,span 2000 gate 5,bootstrap_3,29940.0,8573.0
+PINK_PEARLS,span 2000 gate 10,real,28048.0,8930.0
+PINK_PEARLS,span 2000 gate 10,pearls_sum_+100,16642.0,3998.0
+PINK_PEARLS,span 2000 gate 10,pearls_sum_+100_midday,20954.0,4660.0
+PINK_PEARLS,span 2000 gate 10,mirror,28048.0,8930.0
+PINK_PEARLS,span 2000 gate 10,vol_x0.6,21258.0,6295.0
+PINK_PEARLS,span 2000 gate 10,bootstrap_1,32334.5,8778.5
+PINK_PEARLS,span 2000 gate 10,bootstrap_2,32773.0,9204.0
+PINK_PEARLS,span 2000 gate 10,bootstrap_3,29940.0,8573.0
+PINK_PEARLS,span 2000 gate 20,real,28048.0,8930.0
+PINK_PEARLS,span 2000 gate 20,pearls_sum_+100,16642.0,3998.0
+PINK_PEARLS,span 2000 gate 20,pearls_sum_+100_midday,20954.0,4660.0
+PINK_PEARLS,span 2000 gate 20,mirror,28048.0,8930.0
+PINK_PEARLS,span 2000 gate 20,vol_x0.6,21258.0,6295.0
+PINK_PEARLS,span 2000 gate 20,bootstrap_1,32334.5,8778.5
+PINK_PEARLS,span 2000 gate 20,bootstrap_2,32773.0,9204.0
+PINK_PEARLS,span 2000 gate 20,bootstrap_3,29940.0,8573.0
