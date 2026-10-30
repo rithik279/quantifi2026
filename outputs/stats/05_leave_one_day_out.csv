@@ -1,0 +1,11 @@
+decision,configs,validated,ours_min_percentile,lodo_pick_matches_ours,ours_ge_lodo_pick,ours_minus_pick_total,lodo_pick_min_heldout,ours_min_heldout
+"TOFFEE_CAKE (span, anchor weight, take/make, skew)",108,False,0.727,1,2/3,-312.0,21245.0,21245.0
+"PAPER_LANTERNS trend (span, window, lead, ...)",96,True,0.984,3,3/3,0.0,18785.5,18785.5
+"PINK_PEARLS (k, take/make, skew, cap)",720,True,0.994,2,3/3,441.0,8489.0,8930.0
+"Options (iv_span, take, make, cap)",36,True,0.903,1,3/3,11112.0,33976.5,37911.0
+"TELLURIUM glide (wait, gmin, stall window, ...)",48,False,0.521,3,3/3,0.0,8680.0,8680.0
+"GOLDEN slide (move, window, stall)",37,False,0.5,0,3/3,29.0,142.0,142.0
+Cliff fix: TELLURIUM soft_cap 10 -> 15,6,False,0.583,1,3/3,10972.5,1939.5,7342.0
+Cliff fix: GOLDEN skew 5 -> 2,4,False,0.625,0,3/3,763.0,-534.5,-38.0
+Cliff fix: basket min_trade 2 -> 4,4,False,0.625,2,3/3,1036.0,0.0,1036.0
+Options hedge band (60 chosen),4,False,0.625,1,3/3,7129.0,37911.0,39994.5
