@@ -159,7 +159,15 @@ def _load_trader(path: str):
 
 
 def run_day(trader, data: DayData, record_every: int = 100, keep_fills: bool = False,
-            limits: Dict[str, int] = POSITION_LIMITS) -> DayResult:
+            limits: Dict[str, int] = POSITION_LIMITS, passive_fill_rate: float = 1.0,
+            passive_mode: str = "all", seed: int = 0) -> DayResult:
+    """passive_fill_rate / passive_mode are STRESS settings, not the official rule:
+    - passive_fill_rate < 1 skips each eligible historical trade with probability 1 - rate
+      (a crude stand-in for other traders ahead of us in the queue);
+    - passive_mode="worse" only fills us when a trade prints strictly THROUGH our price
+      (a trade at exactly our price no longer counts).
+    """
+    rng = np.random.default_rng(seed)
     position: Dict[str, int] = defaultdict(int)
     cash: Dict[str, float] = defaultdict(float)
     n_fills: Dict[str, int] = defaultdict(int)
@@ -246,7 +254,13 @@ def run_day(trader, data: DayData, record_every: int = 100, keep_fills: bool = F
                         tpx, tq = t
                         if tq <= 0:
                             continue
-                        if (side == 1 and tpx <= price) or (side == -1 and tpx >= price):
+                        if passive_mode == "worse":
+                            eligible = (side == 1 and tpx < price) or (side == -1 and tpx > price)
+                        else:
+                            eligible = (side == 1 and tpx <= price) or (side == -1 and tpx >= price)
+                        if eligible and passive_fill_rate < 1.0 and rng.random() > passive_fill_rate:
+                            eligible = False
+                        if eligible:
                             f = min(remaining, tq)
                             t[1] -= f
                             remaining -= f
@@ -286,7 +300,7 @@ def get_day(day: int, products: Optional[Iterable[str]] = None) -> DayData:
 
 
 def backtest(trader_factory, days: Iterable[int] = (-2, -1, 0), products: Optional[Iterable[str]] = None,
-             record_every: int = 100, keep_fills: bool = False) -> BacktestResult:
+             record_every: int = 100, keep_fills: bool = False, **stress) -> BacktestResult:
     """trader_factory: a Trader class or a zero-arg callable returning a fresh trader.
 
     If the trader has a `set_day(day)` method it is called before the day starts. The real engine
@@ -299,7 +313,7 @@ def backtest(trader_factory, days: Iterable[int] = (-2, -1, 0), products: Option
         trader = trader_factory()
         if hasattr(trader, "set_day"):
             trader.set_day(d)
-        res.append(run_day(trader, data, record_every=record_every, keep_fills=keep_fills))
+        res.append(run_day(trader, data, record_every=record_every, keep_fills=keep_fills, **stress))
     return BacktestResult(res)
 
 

@@ -82,6 +82,18 @@ def test_orders_over_limit_are_all_cancelled():
     assert res.final_position.get("X", 0) == 0 and res.cancelled_for_limit["X"] == 1
 
 
+def test_stress_worse_mode_ignores_trades_at_our_price():
+    res = run_day(OneShot([Order("X", 100, 3)]), make_day(trade_price=100), limits={"X": 50}, passive_mode="worse")
+    assert res.final_position.get("X", 0) == 0
+    res = run_day(OneShot([Order("X", 100, 3)]), make_day(trade_price=99), limits={"X": 50}, passive_mode="worse")
+    assert res.final_position.get("X", 0) == 3
+
+
+def test_stress_zero_fill_rate_blocks_passive_but_not_taking():
+    res = run_day(OneShot([Order("X", 106, 15)]), make_day(trade_price=104), limits={"X": 50}, passive_fill_rate=0.0)
+    assert res.final_position.get("X", 0) == 10  # takes the 10 at the ask, no passive fill
+
+
 def test_pnl_marks_to_mid():
     res = run_day(OneShot([Order("X", 100, 3)]), make_day(trade_price=99), limits={"X": 50})
     # bought 3 at 100, mid 100 -> 0 PnL
