@@ -53,15 +53,20 @@ def main():
     ap.add_argument("trader", nargs="?", default=os.path.join(ROOT, "submission", "trader.py"))
     ap.add_argument("--tag", default="best316k")
     ap.add_argument("--scenarios", nargs="*", default=None)
+    ap.add_argument("--reuse", action="store_true", help="rebuild the summary from the saved runs CSV")
     a = ap.parse_args()
     names = a.scenarios or (list(sc.SCENARIOS) + ["continuous"])
-    jobs = [(os.path.abspath(a.trader), s) for s in names]
-    print(f"scoring {a.trader} on {len(jobs)} scenarios")
-    with ProcessPoolExecutor() as ex:
-        rows = [r for rs in ex.map(run, jobs) for r in rs]
-    df = pd.DataFrame(rows)
-    df["group"] = df["product"].map(GROUP)
-    df.to_csv(os.path.join(OUT, f"scorecard_{a.tag}_runs.csv"), index=False)
+    runs_csv = os.path.join(OUT, f"scorecard_{a.tag}_runs.csv")
+    if a.reuse and os.path.exists(runs_csv):
+        df = pd.read_csv(runs_csv)
+    else:
+        jobs = [(os.path.abspath(a.trader), s) for s in names]
+        print(f"scoring {a.trader} on {len(jobs)} scenarios")
+        with ProcessPoolExecutor() as ex:
+            rows = [r for rs in ex.map(run, jobs) for r in rs]
+        df = pd.DataFrame(rows)
+        df["group"] = df["product"].map(GROUP)
+        df.to_csv(runs_csv, index=False)
 
     by_group = df.pivot_table(index="scenario", columns="group", values="pnl", aggfunc="sum").reindex(names)
     by_group["TOTAL"] = by_group.sum(axis=1)
@@ -71,7 +76,9 @@ def main():
     by_group["vs_real_%"] = 100 * (by_group["TOTAL"] / real["TOTAL"] - 1)
     by_group.round(0).to_csv(os.path.join(OUT, f"scorecard_{a.tag}_by_group.csv"))
     pd.set_option("display.width", 250)
-    print((by_group / [1000] * 1).round(1).assign(**{"vs_real_%": by_group["vs_real_%"].round(1)}).to_string())
+    shown = by_group.drop(columns="vs_real_%") / 1000
+    shown["vs_real_%"] = by_group["vs_real_%"]
+    print("PnL over days -2..0 in k coins (worst_day = worst single day):\n", shown.round(1).to_string())
 
     # product-level change vs the real data, for the products that carry PnL
     key = ["TOFFEE_CAKE", "PAPER_LANTERNS", "TELLURIUM", "AMETHYST", "PINK_PEARLS", "GOLDEN_PEARLS"]
