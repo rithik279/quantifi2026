@@ -69,6 +69,12 @@ These were chosen with all three days visible. They are robustness moves (toward
 - **What the build script does:** inlines each strategy file with prefixed names (every file has its own LIMITS/PARAMS), then adds a `Trader` that runs every group each tick. Each group keeps its own memory in its own slot of `traderData`, and one group crashing can't stop the others.
 - **Check:** `python src/backtester.py submission/trader.py` gives 112,084 / 113,468 / 101,042, equal to the sum of the groups. The output passes pyflakes (no undefined names).
 
+### 2026-10-30: official-site check of the combined trader
+- **Test:** uploaded `submission/trader.py` (rebuilt after the three fixes) to https://www.utefa.com/quantifi.
+- **Result:** **316,088 total** over days −2..0, versus **326,594 locally: 3.2% lower.** Read off the site's chart (approximate): about 103k / 120k / 93k per day, versus 112k / 113k / 101k locally. The lowest point was −947, at the very start. The curve rises steadily with no large drawdowns.
+- **Why it matters:** our local fill model is close to theirs, so the local numbers, sweeps and robustness results all carry over. A 3% gap is about what we'd expect from small engine differences, such as queue handling and whether `traderData` and positions carry across days. The site plots one continuous curve, but we don't know whether it resets between days.
+- **Next:** upload each group file separately to see where the ~10k gap sits. The candidates are TELLURIUM and AMETHYST, the only fill-sensitive units.
+
 ## Open questions / next steps
 
 1. **The TOFFEE_CAKE anchor (most important):** test an adaptive anchor, such as a very slow EMA starting at 5,000. Check how much PnL it keeps on real data and how it behaves on data with the anchor shifted. Also decide as a team whether 5,000 is structural; like AMETHYST's 10,000, it looks like an organizer-chosen round number.

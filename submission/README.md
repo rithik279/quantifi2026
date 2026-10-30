@@ -27,6 +27,8 @@ Upload these files **in this order**. All of them import only `datamodel`, `json
 
 Upload from the `rithik/robustness` branch: it has the latest parameters and the combined file.
 
+**Results so far (2026-10-30):** #6 `submission/trader.py` scored **316,088** on the official site, versus 326,594 locally (3.2% lower). Our backtester is well calibrated. Uploads #2–#5 would show which group accounts for the gap.
+
 For each upload, write down:
 1. **PnL** per day and per product, if the site shows that breakdown, otherwise the total.
 2. **How days are run:** does the site report days separately? Does position or `traderData` carry over from one day to the next, or does each day start flat?
