@@ -121,3 +121,8 @@ Branch `rithik/weak-products`, cut from tag `best-316k` (official score 316,088)
 - **Why C, not D:** D earns more but holds 40 units after the glide stalls while the market maker slowly unwinds them. That makes it more exposed to the next jump, and it swings more by day (under strict fills: 11.8k / 5.6k / 68.4k). C goes flat, is the most consistent, and is easier to explain. D stays as an option.
 - **Full submission** (`submission/trader.py` rebuilt; only TELLURIUM changed): **120,906 / 125,083 / 111,002 = 356,991**, versus 326,594 for best-316k (+30,397, +9.3%). Every other product is identical to the coin. Output: `16_submission_backtest_with_glide.txt`.
 - **Caveats:** settings were chosen with all three days visible, from about 30 jumps. The same top setting is picked using days −2/−1 only, and its neighbours all hold up. **Not yet checked on the official site.**
+
+### 2026-10-30: official-site check of the glide version
+- **Result:** uploaded `submission/trader.py` from this branch (commit cc5006a). The official site gave **~357k** (Rithik's report), essentially equal to our local 356,991 and up from 316,088 for `best-316k`.
+- **Why it matters:** the TELLURIUM glide overlay works on their engine too, and our local backtester matches theirs almost exactly for this version.
+- **Decision:** tagged as `best-357k`. `best-316k` stays as the previous fallback.
