@@ -103,3 +103,21 @@ Branch `rithik/weak-products`, cut from tag `best-316k` (official score 316,088)
   - **Plateau:** W = 20 or 40 both work (10 of 16 settings positive on every day each), while W = 10 is too early (2 of 16). Exiting on a stall over K = 20 is more reliable than K = 50 (16 of 24 vs 6 of 24). gmin and H barely matter.
   - **Caveats:** chosen with all three days visible, and only ~30 jumps in total. This is TELLURIUM only and doesn't yet coexist with the market maker, which uses the same 40-unit limit.
 - **Next:** combine it with the TELLURIUM market maker (for example, while a glide trade is active, push the market maker's fair value hard in the glide direction), then check it as one unit on all three days and on the official site.
+
+### 2026-10-30: TELLURIUM market maker + glide, combined (`09_tellurium_combined.py`, `15_tellurium_combined.csv`)
+- **Design** (`src/strategies/standalone.py`, `PARAMS["TELLURIUM"]["glide"]`): market-make exactly as before. After a jump (≥ 60 coins within 5 ticks), wait 20 ticks. If the price has moved ≥ 15 coins since the jump, take the full 40 units in that direction and hold until the last 20-tick move stalls (or 300 ticks pass). Then flatten by taking, and market making resumes. The overlay keeps its own tick counter, so it doesn't rely on timestamps resetting between days.
+
+| TELLURIUM version | d−2 | d−1 | d0 | Total |
+|---|---|---|---|---|
+| A. market maker only (best-316k) | 10,649 | 7,342 | 8,704 | 26,694 |
+| B. glide only | 11,603 | 8,680 | 8,843 | 29,126 |
+| **C. market maker + glide, flatten on exit (new default)** | **19,472** | **18,958** | **18,662** | **57,092** |
+| D. market maker + glide, hand back to the market maker on exit | 25,440 | 21,478 | 31,140 | 78,058 |
+| C with wait 40 / stall window 50 / gmin 5 / jump 100 | | | | 43.1k / 43.0k / 55.8k / 49.8k (all positive every day) |
+| D with wait 40 / stall window 50 / jump 100 | | | | 67.2k / 51.4k / 69.2k (all positive every day) |
+
+- **Why the parts add up:** the glide trades (B) and the market making (A) earn on different occasions. B rides the post-jump glide by taking liquidity; A earns the spread the rest of the time.
+- **Stress (only trades *through* our price fill us):** A collapses to 5.1k (−2.0k on day −2). C holds 54.6k (20.7k / 7.5k / 26.4k). At a 50% fill rate, C makes 43.6k (14.8k / 13.9k / 14.9k). The glide part doesn't depend on the generous fill rule.
+- **Why C, not D:** D earns more but holds 40 units after the glide stalls while the market maker slowly unwinds them. That makes it more exposed to the next jump, and it swings more by day (under strict fills: 11.8k / 5.6k / 68.4k). C goes flat, is the most consistent, and is easier to explain. D stays as an option.
+- **Full submission** (`submission/trader.py` rebuilt; only TELLURIUM changed): **120,906 / 125,083 / 111,002 = 356,991**, versus 326,594 for best-316k (+30,397, +9.3%). Every other product is identical to the coin. Output: `16_submission_backtest_with_glide.txt`.
+- **Caveats:** settings were chosen with all three days visible, from about 30 jumps. The same top setting is picked using days −2/−1 only, and its neighbours all hold up. **Not yet checked on the official site.**

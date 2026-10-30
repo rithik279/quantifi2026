@@ -1,0 +1,17 @@
+variant,d_2,d_1,d0,cancelled,total,min_day
+A. market maker only (current submission),10649.0,7342.0,8703.5,0,26694.5,7342.0
+B. glide only (no market making),11603.0,8680.0,8843.0,0,29126.0,8680.0
+"C. market maker + glide, flatten on exit (new default)",19472.0,18957.5,18662.5,0,57092.0,18662.5
+"D. market maker + glide, hand back to MM on exit",25440.5,21477.5,31140.5,0,78058.5,21477.5
+E. C with wait W=40,18609.0,13077.5,11443.5,0,43130.0,11443.5
+F. C with stall window K=50,23652.0,7785.5,11563.5,0,43001.0,7785.5
+G. C with gmin=5,19716.0,19105.5,16995.5,0,55817.0,16995.5
+H. C with jump threshold J=100,12140.0,18957.5,18662.5,0,49760.0,12140.0
+stress A: only trades through our price fill,-1967.0,897.5,6212.0,0,5142.5,-1967.0
+stress C: only trades through our price fill,20733.5,7464.5,26372.0,0,54570.0,7464.5
+D with wait W=40,25250.5,17272.5,24675.5,0,67198.5,17272.5
+D with stall window K=50,14623.5,15779.5,21014.5,0,51417.5,14623.5
+D with jump threshold J=100,16630.5,21477.5,31140.5,0,69248.5,16630.5
+stress D: only trades through our price fill,11782.0,5563.0,68363.0,0,85708.0,5563.0
+stress C: 50% of eligible trades fill us,14786.5,13872.0,14934.5,0,43593.0,13872.0
+stress D: 50% of eligible trades fill us,24195.0,13685.0,40419.5,0,78299.5,13685.0
