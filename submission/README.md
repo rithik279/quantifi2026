@@ -35,7 +35,7 @@ Upload from the `rithik/robustness` branch: it has the latest parameters and the
 | `best-357k` | TELLURIUM post-jump glide | 356,991 | ~357k |
 | `best-361k` (`rithik/weak-products`) | GOLDEN_PEARLS slide | 360,970 (120,906 / 127,082 / 112,982) | ~361k |
 | `rithik/adaptive` | gated adaptive TOFFEE anchor, gated pearl-sum target, scaled options threshold (on top of `best-316k`) | 326,988 (112,872 / 116,264 / 97,852) | not checked |
-| **`rithik/combined`** | `best-361k` + `rithik/adaptive` (worst scenario 290.6k → 310.0k, scenario average 351.5k → 363.2k) | **361,364** (121,694 / 129,878 / 109,792) | not checked |
+| **`rithik/combined`** | `best-361k` + `rithik/adaptive` (worst scenario 290.6k → 310.0k, scenario average 351.5k → 363.2k) | **361,364** (121,694 / 129,878 / 109,792) | **~366k** |
 
 **Results so far (2026-10-30):** #6 `submission/trader.py` scored **316,088** on the official site, versus 326,594 locally (3.2% lower). Our backtester is well calibrated. Uploads #2–#5 would show which group accounts for the gap.
 
