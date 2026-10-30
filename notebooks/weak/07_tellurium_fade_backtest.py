@@ -91,7 +91,9 @@ class SpikeFade:
                     target = side * LIMIT
                 elif self.mode == "naive" and t - s["t0"] >= self.D:
                     side = -s["dirn"]
-                    tgt = s["peak"] - s["dirn"] * self.f * (s["peak"] - s["pre"])
+                    # exit once price is a fraction f of the way from the peak back to the pre-spike level
+                    # (bug fixed 2026-10-30: this was mirrored for down-spikes, so they exited the next tick)
+                    tgt = s["peak"] - self.f * (s["peak"] - s["pre"])
                     stopx = mid + s["dirn"] * self.stop * s["size"] if self.stop else None
                     self.trade = dict(entry=mid, target=tgt, stopx=stopx, t_in=t, side=side)
                     target = side * LIMIT
@@ -102,6 +104,40 @@ class SpikeFade:
                     target = side * LIMIT
         out = {PROD: move_to(d, pos, target)} if target != pos else {}
         return out, 0, ""
+
+
+class GlideTrader:
+    """After a one-tick jump the price glides smoothly toward a new level, either back toward where it
+    started or further away. Wait W ticks, read the glide direction, trade WITH the glide, and exit when
+    the glide flattens (the last K-tick move is below `flat` coins or reverses) or after H ticks."""
+
+    def __init__(self, J=60, W=20, gmin=10, K=30, flat=2.0, H=500, cool=50):
+        self.J, self.W, self.gmin, self.K, self.flat, self.H, self.cool = J, W, gmin, K, flat, H, cool
+        self.hist = deque(maxlen=max(L, K) + 1)
+        self.jump = None   # (t0, mid at jump)
+        self.side, self.t_in, self.last_end = 0, 0, -10**9
+
+    def run(self, state):
+        d = state.order_depths[PROD]
+        mid = (max(d.buy_orders) + min(d.sell_orders)) / 2
+        t = state.timestamp // 100
+        self.hist.append(mid)
+        pos = state.position.get(PROD, 0)
+        h = list(self.hist)
+        if self.side != 0:
+            recent = mid - h[-self.K - 1] if len(h) > self.K else 0.0
+            if t - self.t_in >= self.H or self.side * recent < self.flat:
+                self.side, self.jump, self.last_end = 0, None, t
+        else:
+            if len(h) > L and abs(h[-1] - h[-1 - L]) >= self.J and t - self.last_end >= self.cool:
+                self.jump = (t, mid)   # a new jump restarts the clock
+            if self.jump is not None and t - self.jump[0] >= self.W:
+                g = mid - self.jump[1]
+                if abs(g) >= self.gmin:
+                    self.side, self.t_in = (1 if g > 0 else -1), t
+                self.jump = None
+        target = self.side * LIMIT
+        return ({PROD: move_to(d, pos, target)} if target != pos else {}), 0, ""
 
 
 class RSITrader:
@@ -135,7 +171,7 @@ class RSITrader:
 
 def evaluate(job):
     kind, kw = job
-    factory = (lambda: SpikeFade(**kw)) if kind != "rsi" else (lambda: RSITrader(**kw))
+    factory = {"rsi": lambda: RSITrader(**kw), "glide": lambda: GlideTrader(**kw)}.get(kind, lambda: SpikeFade(**kw))
     res = bt.backtest(factory, (-2, -1, 0), [PROD], record_every=0)
     return dict(kind=kind, params=str(kw), **{f"d{d.day}": d.pnl_by_product.get(PROD, 0.0) for d in res.days})
 
@@ -150,6 +186,8 @@ if __name__ == "__main__":
         jobs.append(("rsi", dict(n=n, level=level, both=both, H=H)))
     for J, D, H, stop in itertools.product([60, 100], [0, 5], [50, 100, 200, 300], [None, 0.5]):
         jobs.append(("ride", dict(mode="ride", J=J, D=D, H=H, stop=stop)))
+    for W, gmin, K, flat, H in itertools.product([10, 20, 40], [5, 15], [20, 50], [0.0, 3.0], [300, 800]):
+        jobs.append(("glide", dict(J=60, W=W, gmin=gmin, K=K, flat=flat, H=H)))
     print(f"{len(jobs)} backtests")
     with ProcessPoolExecutor() as ex:
         df = pd.DataFrame(list(ex.map(evaluate, jobs, chunksize=2))).rename(columns={"d-2": "d_2", "d-1": "d_1"})
@@ -158,7 +196,7 @@ if __name__ == "__main__":
     df["positive_days"] = (df[["d_2", "d_1", "d0"]] > 0).sum(axis=1)
     df.to_csv(os.path.join(OUT, "13_tellurium_fade_backtests.csv"), index=False)
     pd.set_option("display.width", 230); pd.set_option("display.max_colwidth", 90)
-    for kind in ("naive", "confirmed", "rsi", "ride"):
+    for kind in ("naive", "confirmed", "rsi", "ride", "glide"):
         d = df[df.kind == kind].sort_values("min_day", ascending=False)
         print(f"\n=== {kind}: {len(d)} settings, {int((d.positive_days == 3).sum())} positive on all 3 days, "
               f"median total {d.total.median():,.0f} ===")

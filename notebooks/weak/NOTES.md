@@ -76,14 +76,30 @@ Branch `rithik/weak-products`, cut from tag `best-316k` (official score 316,088)
 
 | Strategy | Settings | Positive on all 3 days | Median total (3 days) | Best on worst day (d−2 / d−1 / d0) |
 |---|---|---|---|---|
-| Naive fade (wait D ticks, exit part-way back or after H) | 48 | 1 | −11,080 | +1,314 / +211 / +8,770 |
+| Naive fade (wait D ticks, exit part-way back or after H) | 48 | 0 (after the bug fix below) | −18,775 | −2,364 / −3,580 / +17,800 |
 | Confirmed fade (only after it starts coming back; stop at new extreme) | 36 | 0 | −8,020 | −7,553 / −7,009 / +5,936 |
 | RSI overbought / oversold | 16 | 0 | −12,780 | −520 / +4,621 / −415 |
 | Ride the spike (opposite idea; hold H ticks) | 32 | 0 | +1,538 | +19,588 / +9,792 / −6,694 |
 
-- **Why it fails:** what a spike does next changes from day to day. Spikes kept going on day −2 and came back on day 0, so fading pays on some days and riding on others. The one fade that's positive on all three days earns almost everything on day 0, which looks like luck rather than an edge.
+- **Why it fails:** what a spike does next changes from day to day. Spikes kept going on day −2 and came back on day 0, so fading pays on some days and riding on others. Every fade that looks good earns it on day 0 and loses on days −2 and −1.
 - **What does work on TELLURIUM is what we already run:** passive quotes leaning with recent trade flow, plus a small inventory cap (10.6k / 7.3k / 8.7k). It earns the spread without betting on which kind of spike it is.
 - **Decision:** no change to the submission.
 - **Possible follow-ups:**
   - *Risk overlay:* after a spike, cut the market maker's inventory cap for a few hundred ticks, since jumps are what hurt it.
   - *Classify spikes at the time they happen:* the trading burst after the spike, the spike's size, or the first 20 ticks' behaviour might tell the two kinds apart. With 28 events, though, any rule is easy to overfit.
+
+### 2026-10-30: when do the spike strategies act? Bug found, and the glide idea (`08_spike_timing_example.py`, `14_spike_timing_examples.png`)
+- **Question (Rithik):** are we letting the spike form fully and come back down before calling it a spike, and only then acting?
+- **Answer, from a trace of real trades:** TELLURIUM's spikes are **one-tick jumps** (e.g. tick 305 on day 0: 4,717 → 4,614.5 in a single tick).
+  - "Fade at once" detects the jump and enters **on that same tick**, at the post-jump price. That's the earliest possible, because the jump happens between two ticks, so there's no forming phase to sell into.
+  - "Fade after D ticks" waits on purpose.
+  - Only "confirmed fade" waits for the price to come back (20% of the spike), and that's by design.
+  - The two-kinds-of-spike picture in the event study *is* hindsight: it's a description of what happened, not something available when we'd trade.
+- **Bug found:** in the naive fade, the exit target for down-spikes was mirrored, so those trades exited one tick after entering. Fixed (`tgt = peak − f × (peak − pre)`). The re-run is *worse*: 0 of 48 settings are positive on all three days (median −18.8k). The table above is updated.
+- **New observation from the trace chart:** after each jump the price **glides smoothly** toward a new level, along a curve that flattens out. That level can be back toward the start (tick 932: down to 4,204, glides back up to ~4,440; tick 1,399: up to 4,689, glides back to ~4,480) or further away (tick 305: down to 4,614, keeps gliding to ~4,480). So the useful signal isn't "fade" or "ride" the jump, but **the direction of the glide**, which shows within 20–40 ticks and then persists.
+- **Glide strategy** (`GlideTrader` in `07_tellurium_fade_backtest.py`): after a jump of ≥ 60 coins within 5 ticks, wait W ticks, take 40 units in the direction the price has moved since the jump (if ≥ gmin coins), and exit when the last K-tick move stalls or reverses (or after H ticks). It takes liquidity.
+  - **22 of 48 settings are positive on all three days** (median total +13.7k). The fades, RSI and ride managed 0–1 of 16–48.
+  - **Best:** W = 20, gmin = 15, K = 20, flat = 0 → **+11,603 / +8,680 / +8,843**. That's the same top pick when settings are chosen on days −2/−1 only, so day 0 was effectively held out.
+  - **Plateau:** W = 20 or 40 both work (10 of 16 settings positive on every day each), while W = 10 is too early (2 of 16). Exiting on a stall over K = 20 is more reliable than K = 50 (16 of 24 vs 6 of 24). gmin and H barely matter.
+  - **Caveats:** chosen with all three days visible, and only ~30 jumps in total. This is TELLURIUM only and doesn't yet coexist with the market maker, which uses the same 40-unit limit.
+- **Next:** combine it with the TELLURIUM market maker (for example, while a glide trade is active, push the market maker's fair value hard in the glide direction), then check it as one unit on all three days and on the official site.
