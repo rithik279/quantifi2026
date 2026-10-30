@@ -81,3 +81,22 @@ These were chosen with all three days visible. They are robustness moves (toward
 2. **CSCV / probability of backtest overfitting:** record PnL per 2,500-tick block in the sweeps and compute PBO per workstream (see the research doc).
 3. **Structural Monte Carlo** for the three assumptions that carry the most PnL: the TOFFEE_CAKE anchor, PAPER_LANTERNS kink frequency, and LYCHEE realized vol.
 4. **Official-site calibration** (`submission/README.md`): if their fills are stricter, TELLURIUM and AMETHYST are the products to re-tune. The rest should hold.
+
+### 2026-10-30: combined version = `best-361k` + `rithik/adaptive` (branch `rithik/combined`)
+- **What it is:** a merge of `rithik/weak-products` (TELLURIUM glide, GOLDEN slide; tag `best-361k`, ~361k on the official site) into `rithik/adaptive`:
+  - gated adaptive TOFFEE anchor (span 2,000, gate 20);
+  - gated adaptive pearl-sum target (span 1,000, gate 10);
+  - options take threshold scaled to recent wobble size (k 0.8, minimum 2).
+  `pearls.py` now keeps one `traderData` memory for both the GOLDEN slide and the PINK sum target.
+- **Real days:** **121,694 / 129,878 / 109,792 = 361,364** (`best-361k`: 120,906 / 127,082 / 112,982 = 360,970). TOFFEE, PINK, TELLURIUM and GOLDEN are unchanged to the coin, so the gates stay shut on real data. Options make +0.4k overall, with day 0 3.2k lower and day −1 higher.
+- **Scenario scorecard** (`outputs/adaptive/compare_weak_v2_vs_combined_v1.*`, 21 scenarios + back-to-back days):
+
+| | `best-361k` | combined |
+|---|---|---|
+| Real days | 361.0k | 361.4k |
+| Worst scenario | 290.6k (TOFFEE centre −50) | **310.0k** (implied vol −20%, genuinely less edge) |
+| Average over scenarios | 351.5k | **363.2k** |
+
+  - **Gains:** TOFFEE centre ±25/±50, mid-day jump or drift: +25 to +55k each. Pearl sum moved: +7 to +18k. Implied vol −20%: +12.9k.
+  - **Small costs:** LYCHEE vol ×1.5 −2.8k, implied vol +20% −1.7k, reshuffled days −1.0 to −2.3k, back-to-back days −2.8k.
+- **Decision:** the combined version keeps `best-361k`'s real-day PnL and removes its two biggest single-assumption risks. It's the candidate for the final submission. **Not yet checked on the official site.**
