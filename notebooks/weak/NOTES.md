@@ -63,3 +63,27 @@ Branch `rithik/weak-products`, cut from tag `best-316k` (official score 316,088)
 2. **GRANADILLA / DRAGONFRUIT flow at 500 ticks:** weak evidence that buying predicts rises. It'd need a careful check with proper standard errors before trusting it.
 3. **TELLURIUM post-jump fade** and **GOLDEN step behaviour:** Rithik is looking at these.
 4. **For the abstract:** "PB & J are linked (+0.6), but the link is simultaneous, so it reduces risk rather than predicting moves" is a good depth-of-analysis point, alongside the pearls' sum rule.
+
+### 2026-10-30: TELLURIUM spike fade / RSI (Rithik's idea) (`06_tellurium_spikes.py`, `07_tellurium_fade_backtest.py`)
+- **Hypothesis (Rithik):** TELLURIUM makes sharp peaks in either direction. Measure the typical peak, fade it (sell up-spikes, buy down-spikes), exit when price is back near where the spike started, then wait for the next one. Like a VIX spike or implied-vol crush, or RSI overbought/oversold.
+- **Spike study:** 28 spikes of ≥ 60 coins within 5 ticks (8 / 8 / 12 by day; 14 up, 14 down), median size 163 coins. Event list: `11_tellurium_spike_events.csv`. Chart: `11_tellurium_spike_shape.png`, every spike scaled by its size and flipped to point up.
+  - **There are two kinds of spike.** About half decay smoothly back to 20–40% of the spike within ~300 ticks (the "sharp peaks"). The rest are permanent steps, or keep going to 1.5–2.5× the spike.
+  - **The median spike keeps going first,** to ~1.35× by tick 200, then comes back only partway (~0.8× at 500–750 ticks).
+  - **Only 39% get back to the pre-spike level within 2,000 ticks,** and 54% give back at least half. Before any reversal, the price typically runs a further 185 coins, more than the spike itself.
+  - **By day it flips.** In the first 100 ticks it continued on every day (by 56% / 18% / 28% of the spike), but over 2,000 ticks day −2 kept going (−1.03) while day 0 came back (+0.48).
+- **RSI** (`12_tellurium_rsi_zones.csv`): "overbought" (RSI over 50 ticks above 70) is followed by a 500-tick fall on all three days (−54 / −55 / −20). "Oversold" isn't followed by a bounce (day −2 kept falling). Entries overlap heavily, so this is weaker than it looks.
+- **Backtests** (TELLURIUM only, taking liquidity, 40 units; `13_tellurium_fade_backtests.csv`):
+
+| Strategy | Settings | Positive on all 3 days | Median total (3 days) | Best on worst day (d−2 / d−1 / d0) |
+|---|---|---|---|---|
+| Naive fade (wait D ticks, exit part-way back or after H) | 48 | 1 | −11,080 | +1,314 / +211 / +8,770 |
+| Confirmed fade (only after it starts coming back; stop at new extreme) | 36 | 0 | −8,020 | −7,553 / −7,009 / +5,936 |
+| RSI overbought / oversold | 16 | 0 | −12,780 | −520 / +4,621 / −415 |
+| Ride the spike (opposite idea; hold H ticks) | 32 | 0 | +1,538 | +19,588 / +9,792 / −6,694 |
+
+- **Why it fails:** what a spike does next changes from day to day. Spikes kept going on day −2 and came back on day 0, so fading pays on some days and riding on others. The one fade that's positive on all three days earns almost everything on day 0, which looks like luck rather than an edge.
+- **What does work on TELLURIUM is what we already run:** passive quotes leaning with recent trade flow, plus a small inventory cap (10.6k / 7.3k / 8.7k). It earns the spread without betting on which kind of spike it is.
+- **Decision:** no change to the submission.
+- **Possible follow-ups:**
+  - *Risk overlay:* after a spike, cut the market maker's inventory cap for a few hundred ticks, since jumps are what hurt it.
+  - *Classify spikes at the time they happen:* the trading burst after the spike, the spike's size, or the first 20 ticks' behaviour might tell the two kinds apart. With 28 events, though, any rule is easy to overfit.
