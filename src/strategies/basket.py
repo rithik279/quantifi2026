@@ -25,7 +25,7 @@ PARAMS = dict(
     scale=1000.0,      # premium deviation at which we hold the full position
     max_baskets=40,    # 40 unhedged; hedged is capped at 13 by GRANADILLA's limit (3 x 13 = 39)
     hedge=True,
-    min_trade=2,       # don't rebalance for less than this many baskets
+    min_trade=4,       # don't rebalance for less than this many baskets (1 over-trades and loses every day)
 )
 
 

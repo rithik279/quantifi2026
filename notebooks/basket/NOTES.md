@@ -52,3 +52,7 @@ Strategy: `src/strategies/basket.py`.
 3. **Execution:** we cross the full spread on every rebalance. Resting at the touch on the basket leg and only crossing the fruit legs should cut costs.
 4. **Sanity-check the anchor on the official backtester.** If the day-1 premium opens far from 0, this strategy carries a big position immediately.
 5. **For the abstract:** chart 02 (basket vs NAV and the premium) plus the day-by-day signal table make a clear "we tested it, here's why we only trust the fixed anchor" story.
+
+### 2026-10-30: robustness follow-up (`rithik/robustness`, see `notebooks/robustness/NOTES.md`)
+- **`min_trade` 2 → 4.** Values of 1 / 2 / 4 / 8 give −17.6k (negative every day) / 5.6k / 7.9k / 9.9k (but 0 on day 0). Rebalancing on every one-basket wiggle of the target crosses four spreads repeatedly, so the old choice sat next to a cliff. Result: 1,589 / 5,283 / 1,036.
+- **Anchor × scale heatmap:** every cell is small (2–9k total, worst day −2k to +1k). There's no region of strong, reliable edge, which matches the low-confidence label.

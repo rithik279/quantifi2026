@@ -59,3 +59,8 @@ Strategy: `src/strategies/pearls.py`.
 3. **PINK refinements:** use microprice or the touch for the other four instead of the mid, and try a horizon-aware k (bigger when the deviation is old).
 4. **Check on the official backtester** that PINK's PnL survives. It's the single biggest robust edge we've found so far.
 5. **For the abstract:** `01_mids_and_sum.png`, `05_pink_vs_implied.png` and `08_pink_pnl_by_k.png` tell the full story: hidden rule → who enforces it → what it's worth.
+
+### 2026-10-30: robustness follow-up (`rithik/robustness`, see `notebooks/robustness/NOTES.md`)
+- **GOLDEN `skew` 5 → 2.** Skew 0 / 2 / 5 / 10 → 1.2k / 1.1k / 1.0k / −1.1k, so 5 sat next to a losing value. Result: 142 / −38 / 960.
+- **PINK heatmap (k × take_edge):** a diagonal ridge, so a stronger signal needs a higher take threshold. (0.5, 1), (0.75, 3) and (1.0, 5) are all ~27–28k, so the edge doesn't depend on one exact setting.
+- **Fill stress:** PINK is unaffected (28.0k → 27.8k with only through-price fills), because it earns by taking.

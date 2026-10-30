@@ -27,7 +27,7 @@ PARAMS: Dict[str, dict] = {
     "AMETHYST":       dict(fair="fixed", value=10_000, take_edge=1, make_edge=1, skew=0),
     "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0),
     "PAPER_LANTERNS": dict(fair="trend", span=20, slope_window=100, lead=100, take_edge=1, make_edge=1, skew=2),
-    "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=10),
+    "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15),
     "JELLY":          dict(fair="mid", take_edge=100, make_edge=1, skew=0, soft_cap=3),
     "PEANUT_BUTTER":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=10),
 }

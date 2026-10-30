@@ -39,7 +39,7 @@ STANDALONE_PARAMS: Dict[str, dict] = {
     "AMETHYST":       dict(fair="fixed", value=10_000, take_edge=1, make_edge=1, skew=0),
     "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0),
     "PAPER_LANTERNS": dict(fair="trend", span=20, slope_window=100, lead=100, take_edge=1, make_edge=1, skew=2),
-    "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=10),
+    "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15),
     "JELLY":          dict(fair="mid", take_edge=100, make_edge=1, skew=0, soft_cap=3),
     "PEANUT_BUTTER":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=10),
 }
@@ -165,7 +165,7 @@ PEARLS_SUM_TARGET = 50_000
 PEARLS_PARAMS: Dict[str, dict] = {
     "WHITE_PEARLS":  dict(fair="mid", take_edge=100, make_edge=2, skew=0, soft_cap=5),
     "BLACK_PEARLS":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=5),
-    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=5, soft_cap=20),
+    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20),
     "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20),
     "BLUE_PEARLS":   dict(fair="mid", take_edge=100, make_edge=3, skew=2, soft_cap=5),
 }
@@ -260,7 +260,7 @@ BASKET_PARAMS = dict(
     scale=1000.0,      # premium deviation at which we hold the full position
     max_baskets=40,    # 40 unhedged; hedged is capped at 13 by GRANADILLA's limit (3 x 13 = 39)
     hedge=True,
-    min_trade=2,       # don't rebalance for less than this many baskets
+    min_trade=4,       # don't rebalance for less than this many baskets (1 over-trades and loses every day)
 )
 
 

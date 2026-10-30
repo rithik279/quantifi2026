@@ -1,0 +1,106 @@
+unit,group,tag,overrides,stress,d_2,d_1,d0,total,min_day
+OPTIONS_BOOK,options,official rule,{},{},46217.5,43983.0,39994.5,130195.0,39994.5
+OPTIONS_BOOK,options,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",47368.0,43978.0,39786.5,131132.5,39786.5
+OPTIONS_BOOK,options,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",47187.5,44329.5,39195.5,130712.5,39195.5
+OPTIONS_BOOK,options,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",45749.5,41958.0,42815.5,130523.0,41958.0
+OPTIONS_BOOK,options,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",47198.5,45096.0,40850.0,133144.5,40850.0
+OPTIONS_BOOK,options,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",47354.0,43755.0,41063.5,132172.5,41063.5
+OPTIONS_BOOK,options,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",46312.0,42238.5,42164.5,130715.0,42164.5
+OPTIONS_BOOK,options,only trades through our price,{},{'passive_mode': 'worse'},46647.0,43892.0,41848.0,132387.0,41848.0
+OPTIONS_BOOK,options,options assumes day 1 (no day info),{},{} no_day,48410.5,44677.0,37030.5,130118.0,37030.5
+AMETHYST,standalone,official rule,{},{},527.0,608.0,477.5,1612.5,477.5
+AMETHYST,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",379.0,435.0,368.0,1182.0,368.0
+AMETHYST,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",372.5,460.0,351.5,1184.0,351.5
+AMETHYST,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",257.0,273.0,236.0,766.0,236.0
+AMETHYST,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",254.5,319.0,245.0,818.5,245.0
+AMETHYST,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",109.0,130.0,131.0,370.0,109.0
+AMETHYST,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",103.5,150.0,117.0,370.5,103.5
+AMETHYST,standalone,only trades through our price,{},{'passive_mode': 'worse'},0.0,0.0,0.0,0.0,0.0
+TOFFEE_CAKE,standalone,official rule,{},{},24080.0,24774.0,21245.0,70099.0,21245.0
+TOFFEE_CAKE,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",23889.0,24600.0,20848.0,69337.0,20848.0
+TOFFEE_CAKE,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",23963.0,24640.0,21301.0,69904.0,21301.0
+TOFFEE_CAKE,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",23792.0,24572.0,21052.0,69416.0,21052.0
+TOFFEE_CAKE,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",24013.0,24604.0,21345.0,69962.0,21345.0
+TOFFEE_CAKE,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",23917.0,24424.0,21128.0,69469.0,21128.0
+TOFFEE_CAKE,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",23802.0,24456.0,21345.0,69603.0,21345.0
+TOFFEE_CAKE,standalone,only trades through our price,{},{'passive_mode': 'worse'},23760.0,24472.0,21170.0,69402.0,21170.0
+PAPER_LANTERNS,standalone,official rule,{},{},19769.0,19496.0,18785.5,58050.5,18785.5
+PAPER_LANTERNS,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",19685.0,19427.0,18739.5,57851.5,18739.5
+PAPER_LANTERNS,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",19773.0,19247.0,18635.0,57655.0,18635.0
+PAPER_LANTERNS,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",19673.0,19387.0,18618.5,57678.5,18618.5
+PAPER_LANTERNS,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",19708.0,19215.0,18543.5,57466.5,18543.5
+PAPER_LANTERNS,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",19672.0,19242.0,18600.5,57514.5,18600.5
+PAPER_LANTERNS,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",19655.0,19155.0,18480.0,57290.0,18480.0
+PAPER_LANTERNS,standalone,only trades through our price,{},{'passive_mode': 'worse'},19616.0,19195.0,18482.5,57293.5,18482.5
+TELLURIUM,standalone,official rule,{},{},6440.5,8160.5,8893.0,23494.0,6440.5
+TELLURIUM,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",5804.0,4982.0,8744.5,19530.5,4982.0
+TELLURIUM,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",10514.5,7231.0,3270.0,21015.5,3270.0
+TELLURIUM,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",-1200.0,7056.0,-2057.5,3798.5,-2057.5
+TELLURIUM,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",1439.5,3668.0,3154.5,8262.0,1439.5
+TELLURIUM,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",11258.5,3607.5,-8458.5,6407.5,-8458.5
+TELLURIUM,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",5197.0,2072.0,3107.5,10376.5,2072.0
+TELLURIUM,standalone,only trades through our price,{},{'passive_mode': 'worse'},-360.5,897.5,3629.5,4166.5,-360.5
+JELLY,standalone,official rule,{},{},-766.5,742.0,426.0,401.5,-766.5
+JELLY,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",-835.0,997.0,-105.0,57.0,-835.0
+JELLY,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",-871.0,492.0,1710.0,1331.0,-871.0
+JELLY,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",-1143.5,1232.0,151.0,239.5,-1143.5
+JELLY,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",-554.0,324.0,-44.0,-274.0,-554.0
+JELLY,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",-370.5,645.0,-318.0,-43.5,-370.5
+JELLY,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",-263.5,114.0,674.0,524.5,-263.5
+JELLY,standalone,only trades through our price,{},{'passive_mode': 'worse'},0.0,0.0,0.0,0.0,0.0
+PEANUT_BUTTER,standalone,official rule,{},{},-319.5,711.5,-23.0,369.0,-319.5
+PEANUT_BUTTER,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",-600.5,-760.5,567.0,-794.0,-760.5
+PEANUT_BUTTER,standalone,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",813.0,-1005.5,-175.0,-367.5,-1005.5
+PEANUT_BUTTER,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",-1249.0,1518.5,-100.0,169.5,-1249.0
+PEANUT_BUTTER,standalone,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",-683.5,32.5,1272.0,621.0,-683.5
+PEANUT_BUTTER,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",-2059.0,-106.5,80.0,-2085.5,-2059.0
+PEANUT_BUTTER,standalone,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",645.0,-609.5,1086.0,1121.5,-609.5
+PEANUT_BUTTER,standalone,only trades through our price,{},{'passive_mode': 'worse'},0.0,0.0,0.0,0.0,0.0
+WHITE_PEARLS,pearls,official rule,{},{},558.0,2154.5,495.5,3208.0,495.5
+WHITE_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",485.0,2239.0,229.0,2953.0,229.0
+WHITE_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",992.0,1759.0,-27.5,2723.5,-27.5
+WHITE_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",138.0,2386.0,52.5,2576.5,52.5
+WHITE_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",112.0,1857.5,-689.5,1280.0,-689.5
+WHITE_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",91.0,1845.5,328.5,2265.0,91.0
+WHITE_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",552.0,1600.5,208.0,2360.5,208.0
+WHITE_PEARLS,pearls,only trades through our price,{},{'passive_mode': 'worse'},0.0,0.0,0.0,0.0,0.0
+BLACK_PEARLS,pearls,official rule,{},{},-160.0,-191.5,247.0,-104.5,-191.5
+BLACK_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",-221.0,-789.0,492.0,-518.0,-789.0
+BLACK_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",-388.0,492.0,645.0,749.0,-388.0
+BLACK_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",245.0,-729.5,612.0,127.5,-729.5
+BLACK_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",155.0,337.0,193.0,685.0,155.0
+BLACK_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",476.0,-1070.5,327.0,-267.5,-1070.5
+BLACK_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",400.0,-444.5,107.0,62.5,-444.5
+BLACK_PEARLS,pearls,only trades through our price,{},{'passive_mode': 'worse'},0.0,0.0,0.0,0.0,0.0
+GOLDEN_PEARLS,pearls,official rule,{},{},134.0,152.5,701.5,988.0,134.0
+GOLDEN_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",93.0,-89.5,465.5,469.0,-89.5
+GOLDEN_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",93.0,89.0,170.5,352.5,89.0
+GOLDEN_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",43.0,-231.0,-262.5,-450.5,-262.5
+GOLDEN_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",69.0,-448.0,224.5,-154.5,-448.0
+GOLDEN_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",34.0,-463.0,735.0,306.0,-463.0
+GOLDEN_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",32.0,-74.5,329.5,287.0,-74.5
+GOLDEN_PEARLS,pearls,only trades through our price,{},{'passive_mode': 'worse'},0.0,0.0,0.0,0.0,0.0
+PINK_PEARLS,pearls,official rule,{},{},10029.0,8930.0,9089.0,28048.0,8930.0
+PINK_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",10003.0,8903.0,9054.0,27960.0,8903.0
+PINK_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",10004.0,8913.0,9078.0,27995.0,8913.0
+PINK_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",9970.0,8893.0,9030.0,27893.0,8893.0
+PINK_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",9975.0,8909.0,9056.0,27940.0,8909.0
+PINK_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",9967.0,8891.0,9013.0,27871.0,8891.0
+PINK_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",9952.0,8878.0,8996.0,27826.0,8878.0
+PINK_PEARLS,pearls,only trades through our price,{},{'passive_mode': 'worse'},9932.0,8871.0,8989.0,27792.0,8871.0
+BLUE_PEARLS,pearls,official rule,{},{},-231.0,-327.0,-394.0,-952.0,-394.0
+BLUE_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",-122.0,-399.5,-381.0,-902.5,-399.5
+BLUE_PEARLS,pearls,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",-104.0,-449.0,-441.0,-994.0,-449.0
+BLUE_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",192.0,-209.0,-426.0,-443.0,-426.0
+BLUE_PEARLS,pearls,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",103.5,-424.5,-287.0,-608.0,-424.5
+BLUE_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",-227.5,-67.5,-621.0,-916.0,-621.0
+BLUE_PEARLS,pearls,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",155.0,217.0,-3.0,369.0,-3.0
+BLUE_PEARLS,pearls,only trades through our price,{},{'passive_mode': 'worse'},0.0,0.0,0.0,0.0,0.0
+BASKET_GROUP,basket,official rule,{},{},795.0,4182.0,626.5,5603.5,626.5
+BASKET_GROUP,basket,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 0}",795.0,4182.0,626.5,5603.5,626.5
+BASKET_GROUP,basket,fill rate 75%,{},"{'passive_fill_rate': 0.75, 'seed': 1}",795.0,4182.0,626.5,5603.5,626.5
+BASKET_GROUP,basket,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 0}",795.0,4182.0,626.5,5603.5,626.5
+BASKET_GROUP,basket,fill rate 50%,{},"{'passive_fill_rate': 0.5, 'seed': 1}",795.0,4182.0,626.5,5603.5,626.5
+BASKET_GROUP,basket,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 0}",795.0,4182.0,626.5,5603.5,626.5
+BASKET_GROUP,basket,fill rate 25%,{},"{'passive_fill_rate': 0.25, 'seed': 1}",795.0,4182.0,626.5,5603.5,626.5
+BASKET_GROUP,basket,only trades through our price,{},{'passive_mode': 'worse'},795.0,4182.0,626.5,5603.5,626.5

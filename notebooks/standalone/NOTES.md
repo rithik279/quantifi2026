@@ -90,3 +90,8 @@ The real engine's queue priority isn't modelled, which is part of why this backt
 3. **PAPER_LANTERNS:** detect kinks, using a faster slope estimate or a stop-out when the trend's sign flips.
 4. **TELLURIUM jumps:** after a jump, hold a small position with it for ~100 ticks, then fade it. There are only 30 jumps in the data, so be careful about overfitting.
 5. **Merge:** this file is self-contained. The take/make engine is copied in `pearls.py` and `options.py`, so deduplicate it when building the final `trader.py`.
+
+### 2026-10-30: robustness follow-up (`rithik/robustness`, see `notebooks/robustness/NOTES.md`)
+- **TELLURIUM `soft_cap` 10 → 15.** The cap sweep (3 / 5 / 10 / 15 / 20 / 40 → 4.6k / 8.5k / 23.5k / 26.7k / 25.5k / 20.9k) showed 10 was at the edge of the plateau. Result: 10,649 / 7,342 / 8,704.
+- **TOFFEE_CAKE's anchor is the biggest single assumption:** 4,950 / 4,975 / 5,000 / 5,025 / 5,050 → 3.9k / 26.6k / 70.1k / 35.4k / −0.3k. A 50-coin shift removes the edge (≈0), but doesn't turn it into a big loss.
+- **Fill stress:** TOFFEE_CAKE and PAPER_LANTERNS don't change, because they earn by taking. TELLURIUM (23.5k → 4–8k) and AMETHYST (1.6k → 0–1.2k) depend on the fill rule.

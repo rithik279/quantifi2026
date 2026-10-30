@@ -22,7 +22,7 @@ SUM_TARGET = 50_000
 PARAMS: Dict[str, dict] = {
     "WHITE_PEARLS":  dict(fair="mid", take_edge=100, make_edge=2, skew=0, soft_cap=5),
     "BLACK_PEARLS":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=5),
-    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=5, soft_cap=20),
+    "GOLDEN_PEARLS": dict(fair="plateau", step=50, snap=0.5, take_edge=2, make_edge=0.5, skew=2, soft_cap=20),
     "PINK_PEARLS":   dict(fair="sum", k=0.5, take_edge=1, make_edge=0.5, skew=0, soft_cap=20),
     "BLUE_PEARLS":   dict(fair="mid", take_edge=100, make_edge=3, skew=2, soft_cap=5),
 }

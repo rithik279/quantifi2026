@@ -69,3 +69,8 @@ Strategy: `src/strategies/options.py`.
 3. **Seed the IVs:** start each strike's IV EMA from its day-0 closing value instead of the first tick.
 4. **Smile-based fair value:** fit the smile across strikes each tick (or as a slow EMA of the coefficients) and compare it with the per-strike EMA. That could help the noisy deep in-the-money strikes.
 5. **Merge:** this file is self-contained, and its take/make engine matches `standalone.py`.
+
+### 2026-10-30: robustness follow-up (`rithik/robustness`, see `notebooks/robustness/NOTES.md`)
+- **Sensitivity:** iv_span 500–2,000 × take_edge 2–4 is a plateau (113–130k total, worst day 31–40k), and the chosen (1000, 4) sits inside it. make_edge, skew and min_price barely matter. PnL scales with soft_cap (capacity, not fragility).
+- **Fill stress:** PnL doesn't fall with fewer passive fills (130k → 132k with only through-price fills). **The edge comes from taking, not from resting orders**, which makes it much less dependent on the generous fill rule than we assumed.
+- **Day / time-to-expiry:** assuming day 1 on every historical day (what the official site will do) gives 130.1k vs 130.2k. The error cancels, because each strike's IV is implied with the same time.

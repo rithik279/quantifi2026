@@ -1,0 +1,21 @@
+105 backtests
+tag             official rule  fill rate 75%  fill rate 50%  fill rate 25%  only trades through our price  options assumes day 1 (no day info)
+unit                                                                                                                                          
+AMETHYST                  1.6            1.2            0.8            0.4                            0.0                                  NaN
+BASKET_GROUP              5.6            5.6            5.6            5.6                            5.6                                  NaN
+BLACK_PEARLS             -0.1            0.1            0.4           -0.1                            0.0                                  NaN
+BLUE_PEARLS              -1.0           -0.9           -0.5           -0.3                            0.0                                  NaN
+GOLDEN_PEARLS             1.0            0.4           -0.3            0.3                            0.0                                  NaN
+JELLY                     0.4            0.7           -0.0            0.2                            0.0                                  NaN
+OPTIONS_BOOK            130.2          130.9          131.8          131.4                          132.4                                130.1
+PAPER_LANTERNS           58.1           57.8           57.6           57.4                           57.3                                  NaN
+PEANUT_BUTTER             0.4           -0.6            0.4           -0.5                            0.0                                  NaN
+PINK_PEARLS              28.0           28.0           27.9           27.8                           27.8                                  NaN
+TELLURIUM                23.5           20.3            6.0            8.4                            4.2                                  NaN
+TOFFEE_CAKE              70.1           69.6           69.7           69.5                           69.4                                  NaN
+WHITE_PEARLS              3.2            2.8            1.9            2.3                            0.0                                  NaN
+TOTAL                   321.0          315.9          301.3          302.6                          296.6                                130.1
+
+real	3m12.924s
+user	0m0.015s
+sys	0m0.000s
