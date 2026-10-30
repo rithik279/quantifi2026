@@ -1,0 +1,5 @@
+series,total,mean,median,hit_rate,t_hac,sign_p,top_block_share,top3_share
+Black-Scholes book (unhedged),135785.0,4526.167,4596.25,0.9,5.748,0.0,0.12,0.295
+"Black-Scholes book (hedged, as submitted)",130589.5,4352.983,4382.75,0.967,11.341,0.0,0.069,0.181
+naive: fair = slow EMA of own mid,51926.5,1730.883,3364.75,0.6,1.298,0.181,0.302,0.807
+naive: fair = current mid (passive only),-56879.5,-1895.983,-1972.5,0.233,-2.973,0.999,,

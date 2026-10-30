@@ -1,0 +1,33 @@
+48 backtests
+Noise band: chosen setting rerun with a random 5% of passive fills dropped (5 seeds)
+     unit  base_total  noise_mean  noise_sd  noise_range
+  options    130590.0    130414.0    1300.0       3076.0
+     PINK     28048.0     28038.0      13.0         32.0
+TELLURIUM     57092.0     57320.0    3587.0       8686.0
+ LANTERNS     58050.0     57980.0      39.0         95.0
+   TOFFEE     70099.0     70120.0      29.0         53.0
+
+Chosen setting vs nearest alternatives (paired over the same 30 blocks)
+     unit        chosen_vs  chosen_total  alt_total  chosen_minus_alt  noise_band_2sd  blocks_chosen_better  paired_t                   verdict
+  options hedge_band = 120      130589.5   143907.5          -13318.0         2599.92                  0.47     -1.24    noise with an ordering
+  options  hedge_band = 30      130589.5   113128.5           17461.0         2599.92                  0.73      4.79      chosen really better
+  options hedge_band = 240      130589.5   135785.0           -5195.5         2599.92                  0.53     -0.27    noise with an ordering
+  options    iv_span = 500      130589.5   116109.5           14480.0         2599.92                  0.67      1.65    noise with an ordering
+  options   iv_span = 2000      130589.5   112126.5           18463.0         2599.92                  0.47      1.38    noise with an ordering
+  options     take_k = 0.6      130589.5   126682.5            3907.0         2599.92                  0.53      0.68    noise with an ordering
+  options     take_k = 1.0      130589.5   121612.5            8977.0         2599.92                  0.63      1.30    noise with an ordering
+     PINK         k = 0.25       28048.0    18459.0            9589.0           25.67                  0.77      5.40      chosen really better
+     PINK         k = 0.75       28048.0    23202.0            4846.0           25.67                  0.90      7.94      chosen really better
+     PINK          k = 1.0       28048.0    15070.0           12978.0           25.67                  1.00     12.21      chosen really better
+TELLURIUM    soft_cap = 10       57092.0    57096.5              -4.5         7174.81                  0.47     -0.00    noise with an ordering
+TELLURIUM    soft_cap = 20       57092.0    52347.5            4744.5         7174.81                  0.50      1.22    noise with an ordering
+TELLURIUM     glide.W = 40       57092.0    43130.0           13962.0         7174.81                  0.63      3.23      chosen really better
+TELLURIUM  glide.exit = mm       57092.0    78058.5          -20966.5         7174.81                  0.20     -2.02 alternative really better
+ LANTERNS        lead = 50       58050.5    53020.0            5030.5           77.35                  0.87      5.12      chosen really better
+ LANTERNS       lead = 200       58050.5    58613.0            -562.5           77.35                  0.33     -1.73    noise with an ordering
+   TOFFEE    take_edge = 5       70099.0    74509.0           -4410.0           57.52                  0.70     -0.61    noise with an ordering
+   TOFFEE   take_edge = 10       70099.0    73656.0           -3557.0           57.52                  0.27     -0.81    noise with an ordering
+
+real	2m18.403s
+user	0m0.000s
+sys	0m0.015s

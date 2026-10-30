@@ -1,0 +1,31 @@
+A. Options PnL split (coins). total = entry + direction + pricing; backtest_total is the check
+ hedge  day  entry_edge  lychee_direction  pricing   total  backtest_total  lychee_leg
+  True   -2    -32628.0            2504.0  77130.0 47006.0         47006.0      5712.0
+  True   -1    -30076.0            6420.0  70435.0 46780.0         46780.0      3385.0
+  True    0    -29321.0           -1083.0  67208.0 36804.0         36804.0    -14292.0
+ False   -2    -27620.0           -8216.0  77130.0 41294.0         41294.0         0.0
+ False   -1    -25239.0           -1802.0  70435.0 43394.0         43394.0         0.0
+ False    0    -23751.0            7639.0  67208.0 51096.0         51096.0         0.0
+
+Over 3 days:
+       entry_edge  lychee_direction   pricing     total  backtest_total  lychee_leg
+hedge                                                                              
+False    -76610.0           -2378.0  214773.0  135785.0        135785.0         0.0
+True     -92024.0            7841.0  214773.0  130590.0        130590.0     -5196.0
+
+B. Book vs naive versions over 30 blocks (all unhedged)
+                                   series    total  hit_rate  t_hac  sign_p
+            Black-Scholes book (unhedged) 135785.0     0.900  5.748   0.000
+Black-Scholes book (hedged, as submitted) 130589.5     0.967 11.341   0.000
+        naive: fair = slow EMA of own mid  51926.5     0.600  1.298   0.181
+ naive: fair = current mid (passive only) -56879.5     0.233 -2.973   0.999
+
+Paired over the same 30 blocks:
+            comparison  diff_total  blocks_better  t_hac  sign_p
+   BS vs slow-EMA fair     83858.5          0.633  2.401   0.100
+BS vs current-mid fair    192664.5          0.867  7.289   0.000
+ hedged vs unhedged BS     -5195.5          0.533 -0.270   0.428
+
+real	1m35.299s
+user	0m0.030s
+sys	0m0.046s

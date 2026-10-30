@@ -1,0 +1,19 @@
+unit,chosen_vs,chosen_total,alt_total,chosen_minus_alt,noise_band_2sd,blocks_chosen_better,paired_t,verdict
+options,hedge_band = 120,130589.5,143907.5,-13318.0,2599.917,0.467,-1.239,noise with an ordering
+options,hedge_band = 30,130589.5,113128.5,17461.0,2599.917,0.733,4.792,chosen really better
+options,hedge_band = 240,130589.5,135785.0,-5195.5,2599.917,0.533,-0.27,noise with an ordering
+options,iv_span = 500,130589.5,116109.5,14480.0,2599.917,0.667,1.651,noise with an ordering
+options,iv_span = 2000,130589.5,112126.5,18463.0,2599.917,0.467,1.382,noise with an ordering
+options,take_k = 0.6,130589.5,126682.5,3907.0,2599.917,0.533,0.684,noise with an ordering
+options,take_k = 1.0,130589.5,121612.5,8977.0,2599.917,0.633,1.303,noise with an ordering
+PINK,k = 0.25,28048.0,18459.0,9589.0,25.675,0.767,5.403,chosen really better
+PINK,k = 0.75,28048.0,23202.0,4846.0,25.675,0.9,7.942,chosen really better
+PINK,k = 1.0,28048.0,15070.0,12978.0,25.675,1.0,12.207,chosen really better
+TELLURIUM,soft_cap = 10,57092.0,57096.5,-4.5,7174.814,0.467,-0.002,noise with an ordering
+TELLURIUM,soft_cap = 20,57092.0,52347.5,4744.5,7174.814,0.5,1.224,noise with an ordering
+TELLURIUM,glide.W = 40,57092.0,43130.0,13962.0,7174.814,0.633,3.227,chosen really better
+TELLURIUM,glide.exit = mm,57092.0,78058.5,-20966.5,7174.814,0.2,-2.019,alternative really better
+LANTERNS,lead = 50,58050.5,53020.0,5030.5,77.349,0.867,5.121,chosen really better
+LANTERNS,lead = 200,58050.5,58613.0,-562.5,77.349,0.333,-1.728,noise with an ordering
+TOFFEE,take_edge = 5,70099.0,74509.0,-4410.0,57.515,0.7,-0.606,noise with an ordering
+TOFFEE,take_edge = 10,70099.0,73656.0,-3557.0,57.515,0.267,-0.813,noise with an ordering

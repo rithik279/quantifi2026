@@ -132,3 +132,30 @@ Nothing needs to change in `trader.py`. The analysis gives:
 3. **Exponential-weighted slope for PAPER_LANTERNS** instead of the hard 100-tick window, adopted only if it passes item 5's bar.
 4. **Scenario scorecard by family:** five TOFFEE variants are one family, so the worst case should weight each family once.
 5. **Abstract:** order it as an argument: tested → forecasts → well formed → pays → costs → real → verdict. Use the tables above, and per-block distributions (`03_block_pnl.png`) rather than cumulative curves.
+
+## 6. Fragility band (`05_fragility_band.py`, `06_noise_band.csv`, `06_fragility_comparisons.csv`)
+- **Noise band:** 1 sd of total PnL when a random 5% of passive fills are dropped (5 seeds). Options ±1.3k and TELLURIUM ±3.6k, because both rely on passive fills. PINK ±13, PAPER_LANTERNS ±39 and TOFFEE ±29, because those take liquidity.
+- **Rule:** a difference is "real" only if it exceeds 2 × the band *and* the paired block t is at least 2.
+- **Chosen setting really better than the alternative:**
+  - PINK k = 0.5 vs 0.25 / 0.75 / 1.0 (t 5.4 / 7.9 / 12.2);
+  - PAPER_LANTERNS lead 100 vs 50 (t 5.1);
+  - TELLURIUM glide wait 20 vs 40 (t 3.2);
+  - options hedge band 60 vs 30 (t 4.8).
+- **Noise with an ordering:**
+  - options hedge band 60 vs 120 (+13.3k for 120, but t −1.2) and vs 240;
+  - options iv_span 500 / 2,000 and take_k 0.6 / 1.0;
+  - TELLURIUM cap 10 / 20;
+  - PAPER_LANTERNS lead 200;
+  - TOFFEE take_edge 5 / 10.
+- **Alternative really better (borderline):** TELLURIUM glide exit "hand back to the market maker" instead of flattening: +21.0k, better in 80% of blocks, t −2.02. We chose flattening for lower inventory risk. This is the one setting the data says to reconsider. It was found with all days visible, so treat it as a candidate, not a fix.
+
+## 7. Options lie detector (`06_options_attribution.py`, `07_options_attribution.csv`, `07_options_vs_naive*.csv`)
+- **Exact split, 3 days, hedged as submitted (sums to the backtest's 130,590):**
+  - pricing (vouchers converging toward fair while held): **+214.8k**;
+  - entry edge (crossing the spread when we take): **−92.0k**;
+  - LYCHEE direction (net delta × LYCHEE move): **+7.8k**.
+- **Unhedged:** direction is −2.4k. **The book's profit is pricing, not LYCHEE direction.** The LYCHEE leg's result is noise-sized either way.
+- **What Black-Scholes adds (paired, 30 blocks, all unhedged):**
+  - vs fair = current mid (pure passive market making): **+192.7k**, t 7.3. Passive voucher market making alone *loses* 56.9k.
+  - vs fair = slow EMA of the voucher's own mid: **+83.9k**, 63% of blocks, t 2.4. The naive EMA version makes 51.9k but isn't significant on its own (t 1.3).
+- **Hedging:** −5.2k total (t −0.3, i.e. noise), but positive blocks rise from 90% to 97% and the block t from 5.7 to 11.3. It's a variance-reduction choice, as intended.
