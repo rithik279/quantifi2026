@@ -1,0 +1,65 @@
+# Weak products: notes
+
+Branch `rithik/weak-products`, cut from tag `best-316k` (official score 316,088). Nothing here has changed the submission. The only code change is an optional `improve` setting in `src/strategies/standalone.py` (default 0, so behaviour is unchanged). Scripts are in this folder (run from the repo root); charts and CSVs are in `outputs/weak/`.
+
+## TL;DR
+
+- **PEANUT_BUTTER aggressive market-making doesn't work, and the limit isn't costs.** Only ~165 units a day trade in PB, so even capturing all of them at the full 3-coin half-spread is worth at most ~500 a day. Tighter quoting already captures 92% of that volume, yet loses money: after each fill the price moves 5–9 coins against us within 100 ticks. Quoting inside the spread fills the *same* trades at a worse price.
+- **Rithik's PB & J hint is right:** PEANUT_BUTTER and JELLY move together (tick correlation +0.59 to +0.61 every day, up to +0.85 over 1,000 ticks), and no other product correlates with either. JELLY ≈ 0.41 × PB + a slowly wandering gap.
+- **But the pair doesn't trade.** A hedged mean-reversion trade on the gap loses on every setting and every day, because the gap wanders (350–800) more slowly than crossing both spreads costs. Its value is **hedging**: holding −0.41 PB per JELLY cuts JELLY's risk by ~30%.
+- **The PB / FRUIT_BASKET resemblance is book shape, not price.** Of all 26 products, these two have the smallest spread relative to how far the price moves each tick. Their prices are unrelated (correlation ≈ 0).
+- **BLUE_PEARLS momentum is real but small.** Its last 5 ticks predict the next 5 (+0.18 to +0.21 every day), but the move is ~1 coin against a 6-coin spread. Leaning BLUE's fair value with it turns −1k into roughly 0 to +2k over 3 days, with day −2 negative in every version. Not robust enough to add.
+- **There is no time-of-day pattern.** The three days don't move alike on the same clock (correlation ≈ 0 for every product).
+- **Left for Rithik:** GOLDEN_PEARLS and TELLURIUM.
+
+## Log
+
+### 2026-10-30: visual pack and scan (`01_look.py`)
+- **Charts:** `01_paths.png`, `02_intraday_overlay.png`, `03_zoom_trades.png`, `04_trend_or_revert.png`.
+- **Lead-lag scan:** across all 26 products, does any product's last k-tick move predict a weak product's next k ticks with the same sign on all three days? (`05_leadlag_scan.csv`)
+  - **Real:** BLUE momentum at 5 ticks (+0.18 to +0.21), and pearls pushing each other at 5 ticks (BLUE up → WHITE and BLACK down next, about −0.07; consistent with the sum = 50,000 rule).
+  - **Probably noise:** the 100-tick cross-product hits, like PEANUT_BUTTER "led by" LYCHEE (±0.05–0.1). A day has only ~100 independent 100-tick windows, so a correlation of ±0.1 is about one standard error, and we tested over 1,000 pairs.
+- **Trade flow:** GRANADILLA's buying over the last 500 ticks predicts its next 500 (+0.18 to +0.23). That's ~20 windows a day, so it's weak evidence.
+- **TELLURIUM:** flow over the last 50 ticks predicts the next 500 *negatively* (−0.11 to −0.28), the overshoot-then-revert after jumps. Trading is 5× busier in the 50 ticks after a jump (30.8 trades vs 6.1 normally), and there's no extra trading before a jump.
+- **Caution about long horizons:** the variance ratio drops below 1 at 1,000–2,000 ticks for almost every product. That's mostly a finite-sample effect of measuring within a single 10,000-tick day, not evidence of mean reversion. Don't chase it.
+
+### 2026-10-30: PEANUT_BUTTER aggressive market-making (`02_peanut_butter_mm.py`, `07_peanut_butter_mm_variants.csv`)
+- **Hypothesis (Rithik):** PB looks efficient with a tight spread, so quote tight around the mid and trade as much as possible. With no transaction costs, a slim edge per trade should add up.
+- **Available volume:** 194 / 153 / 148 units a day across 79 / 58 / 59 trades, all at the best bid or ask. With a 3-coin half-spread, the ceiling is about **500 a day**, even if every unit filled and the price never moved.
+
+| Variant | Share of volume captured | Edge at fill / unit | Kept after 100 ticks / unit | PnL 3 days |
+|---|---|---|---|---|
+| current (best bid/ask, cap 10) | 55% | 3.20 | −8.98 | +369 |
+| max size (cap 50, no lean) | 72% | 3.19 | −6.35 | −4,897 |
+| tight (fair = mid, margin 0.5) | 92% | 3.02 | −5.33 | −126 |
+| 1 tick inside the spread | 92% | 2.16 | −6.19 | −521 |
+| 2 ticks inside the spread | 92% | 1.52 | −6.83 | −817 |
+
+- **Why it fails:**
+  1. *Volume, not cost, is the limit.* A resting order only fills when a historical trade prints at our price, and PB has ~60–80 trades a day. "No transaction costs" means we can trade as often as we like, but only by *taking*, and taking pays the spread, which is the real cost here.
+  2. *Quoting inside the spread can't create volume.* Every trade already prints at the best bid or ask, so our inside quote fills on the same trades at a worse price.
+  3. *Adverse moves:* after we're filled, PB keeps moving the trade's way (−5 to −9 per unit within 100 ticks), more than the 3-coin edge.
+- **Decision:** keep PB at small size for breadth. No change.
+
+### 2026-10-30: PB & J and PB / FRUIT_BASKET hints (`03_pbj_hints.py`, `08_pb_jelly_basket.png`)
+- **PB vs JELLY:** price-change correlation is +0.605 / +0.589 / +0.590 tick by tick and +0.684 / +0.785 / +0.854 over 1,000 ticks. Each product's strongest correlate among all 26 is the other; everything else is under ±0.03. They move at the same time, with no lead-lag.
+- **PB vs FRUIT_BASKET:** correlation ≈ 0. What looks alike is the book: these two have the smallest spread relative to their tick-by-tick moves (0.76 and 1.25, versus 3.5 for JELLY and 6 for AMETHYST). That makes taking cheap and market-making thin for both.
+- **"Smooth vs bouncy":** JELLY's spread is 3.5× its typical tick move and PB's only 1.25×. JELLY's wide spread is a big cushion relative to its moves, while PB's is thin. Neither one's quotes lead the other.
+
+### 2026-10-30: the PB & J pair (`04_pbj_pair.py`, `09_pbj_spread.png`)
+- **Hedge ratio:** JELLY ≈ 0.40–0.48 × PB, stable across days (0.412 pooled from 10-tick changes).
+- **The gap S = JELLY − 0.41 × PB:** mean 650 / 558 / 553 by day, std 38–85, half-life 311–2,013 ticks. It's only mildly mean-reverting (variance ratio 0.85 / 0.88 / 0.76 at 10 / 100 / 1,000 ticks), and it wanders between 350 and 800.
+- **Who closes the gap:** the regression signs flip from day to day for most windows. Only the 1,000-tick average predicting the next 500 ticks kept its sign.
+- **Fair value:** PB doesn't improve JELLY's (adding the gap makes JELLY's 20-tick forecast *worse*).
+- **Risk:** JELLY − 0.41 × PB is 28–30% less volatile than JELLY alone, at 100 and 1,000 ticks.
+
+### 2026-10-30: prototypes (`05_prototypes.py`, `10_prototypes.csv`)
+- **PB & J pair trade:** target JELLY = −clip(gap deviation / scale) × 50, hedged with −0.41 × PB, taking liquidity. Over 18 settings it lost on every setting and every day (−24k to −382k total). The gap moves too slowly and too erratically to pay for crossing JELLY's 11-coin spread plus PB's 6.
+- **BLUE momentum:** fair = mid + c × (fast EMA − slow EMA). With c > 0, BLUE goes from −0.95k to between −0.04k and +2.4k (cap 20). But day −2 is negative in every version, and the best settings vary. Not robust enough to add.
+
+## Ideas still open
+
+1. **PB & J hedging** in market-making: lean each product's quotes by the *combined* exposure (JELLY + 0.41 × PB) rather than its own. That's ~30% less risk, so slightly bigger size at the same risk. The expected gain is small, because market-making in both has ~zero edge after adverse moves.
+2. **GRANADILLA / DRAGONFRUIT flow at 500 ticks:** weak evidence that buying predicts rises. It'd need a careful check with proper standard errors before trusting it.
+3. **TELLURIUM post-jump fade** and **GOLDEN step behaviour:** Rithik is looking at these.
+4. **For the abstract:** "PB & J are linked (+0.6), but the link is simultaneous, so it reduces risk rather than predicting moves" is a good depth-of-analysis point, alongside the pearls' sum rule.

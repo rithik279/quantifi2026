@@ -107,10 +107,11 @@ class Trader:
             orders.append(Order(product, bid, -q))
             sell_cap -= q
 
-        # 2) join the touch, never closer to fair than make_edge
+        # 2) join the touch (or step `improve` ticks inside it), never closer to fair than make_edge
         best_bid, best_ask = max(depth.buy_orders), min(depth.sell_orders)
-        bid_px = int(min(best_bid, fair_adj - prm["make_edge"]) // 1)
-        ask_px = int(-((-max(best_ask, fair_adj + prm["make_edge"])) // 1))  # ceil
+        improve = prm.get("improve", 0)
+        bid_px = int(min(best_bid + improve, fair_adj - prm["make_edge"]) // 1)
+        ask_px = int(-((-max(best_ask - improve, fair_adj + prm["make_edge"])) // 1))  # ceil
         if buy_cap > 0:
             orders.append(Order(product, bid_px, buy_cap))
         if sell_cap > 0:
