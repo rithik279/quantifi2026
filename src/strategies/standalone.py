@@ -27,15 +27,25 @@ LIMITS = {"AMETHYST": 50, "TOFFEE_CAKE": 50, "PAPER_LANTERNS": 50, "TELLURIUM": 
 #   >= gmin since the jump, take the full limit in that direction ("ride the glide") and hold until the
 #   last K-tick move stalls below `flat` (or after H ticks); then flatten ("take") or hand back to market
 #   making ("mm"). Market making runs whenever no glide trade is on. See notebooks/weak/NOTES.md.
+# jumpdrift (TELLURIUM, from trader_v4; replaces market making and glide when set): a jump is a 3-tick
+#   move larger than jk x local volatility (bipower variation, which one jump barely inflates; `jump`
+#   coins until the estimate exists). Wait w ticks, then hold the full limit in the direction the price
+#   has moved since 3 ticks after the jump, until H ticks after it. A new jump restarts the clock.
+#   guard (adaptive): every signal is also paper-traded at the touch; skip new trades while fewer than
+#   `min_wins` of the last `n` signals made money (the edge assumes the drift after a jump continues;
+#   on the real days the worst 6 in a row still had 4 winners). None = always trade.
+#   See notebooks/hybrid/NOTES.md.
 # take_edge=100 effectively disables taking. Choices are explained in notebooks/standalone/NOTES.md.
 GLIDE = dict(J=60, W=20, gmin=15, K=20, flat=0.0, H=300, cool=50, exit="take")
+JUMP_GUARD = dict(n=6, min_wins=3)
+JUMPDRIFT = dict(jump=25, jk=5.5, w=20, H=250, guard=JUMP_GUARD)
 PARAMS: Dict[str, dict] = {
     "AMETHYST":       dict(fair="fixed", value=10_000, take_edge=1, make_edge=1, skew=0),
     "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0,
                            anchor_span=2000, anchor_gate=20),  # gated adaptive anchor, notebooks/adaptive/NOTES.md
     "PAPER_LANTERNS": dict(fair="trend", span=20, slope_window=100, lead=100, take_edge=1, make_edge=1, skew=2),
     "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15,
-                           glide=GLIDE),
+                           jumpdrift=JUMPDRIFT),  # was glide=GLIDE (best-366k); notebooks/hybrid/NOTES.md
     "JELLY":          dict(fair="mid", take_edge=100, make_edge=1, skew=0, soft_cap=3),
     "PEANUT_BUTTER":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=10),
 }
@@ -164,6 +174,52 @@ class Trader:
                 return gs["side"] * limit
         return None
 
+    # ---------- jump-drift (TELLURIUM, from trader_v4) ----------
+    @staticmethod
+    def jumpdrift_target(mid: float, bid: int, ask: int, pm: dict, j: dict, limit: int) -> int:
+        """Target position after the latest jump: 0 until `w` ticks after it, then the full limit in the
+        direction of the move since 3 ticks after the jump, until `H` ticks after it."""
+        s = pm.setdefault("jd", {})
+        g = j.get("guard")
+
+        def close_paper():
+            # paper result of the signal that just ended, traded at the touch both ways
+            if s.get("pd"):
+                exit_px = bid if s["pd"] > 0 else ask
+                s["out"] = (s.get("out", []) + [s["pd"] * (exit_px - s["pe"])])[-(g["n"] if g else 1):]
+                s["pd"] = 0
+
+        h = (s.get("h", []) + [mid])[-4:]
+        s["h"] = h
+        k = s.get("k", -1)  # ticks since the last jump (-1: none active)
+        thr = j["jump"]
+        if len(h) >= 3:
+            bp = abs(h[-1] - h[-2]) * abs(h[-2] - h[-3])  # bipower variation (Barndorff-Nielsen & Shephard 2006)
+            s["bv"] = bp if s.get("bv") is None else s["bv"] + (bp - s["bv"]) / 500.0
+            if s["bv"] > 0:
+                thr = j["jk"] * (s["bv"] * 1.5707963 * 3) ** 0.5
+        if len(h) == 4 and abs(h[-1] - h[0]) > thr and (k < 0 or k > 5):
+            k, s["ref"] = 0, None
+            close_paper()
+        elif k >= 0:
+            k += 1
+        if k == 3:
+            s["ref"] = mid
+        tgt = 0
+        if j["w"] <= k <= j["H"] and s.get("ref") is not None:
+            if k == j["w"]:
+                s["dir"] = 1 if mid > s["ref"] else -1 if mid < s["ref"] else 0
+                out = s.get("out", [])
+                s["on"] = g is None or len(out) < g["n"] or sum(x > 0 for x in out) >= g["min_wins"]
+                if s["dir"]:
+                    s["pd"], s["pe"] = s["dir"], (ask if s["dir"] > 0 else bid)
+            tgt = s.get("dir", 0) * limit if s.get("on", True) else 0
+        elif k > j["H"]:
+            k = -1
+            close_paper()
+        s["k"] = k
+        return tgt
+
     @staticmethod
     def take_to(product: str, depth: OrderDepth, position: int, target: int) -> List[Order]:
         """Cross the book level by level toward `target`."""
@@ -194,6 +250,11 @@ class Trader:
             prm = self.params[product]
             position = state.position.get(product, 0)
             fair = self.fair_value(product, depth, state, mem)  # always run, so its memory stays current
+            if "jumpdrift" in prm:
+                bid, ask = max(depth.buy_orders), min(depth.sell_orders)
+                tgt = self.jumpdrift_target((bid + ask) / 2, bid, ask, mem[product], prm["jumpdrift"], LIMITS[product])
+                result[product] = self.take_to(product, depth, position, tgt)
+                continue
             if "glide" in prm:
                 mid = (max(depth.buy_orders) + min(depth.sell_orders)) / 2
                 sig = self.glide_signal(mid, mem[product], prm["glide"], LIMITS[product])

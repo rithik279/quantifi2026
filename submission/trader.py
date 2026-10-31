@@ -39,15 +39,25 @@ STANDALONE_LIMITS = {"AMETHYST": 50, "TOFFEE_CAKE": 50, "PAPER_LANTERNS": 50, "T
 #   >= gmin since the jump, take the full limit in that direction ("ride the glide") and hold until the
 #   last K-tick move stalls below `flat` (or after H ticks); then flatten ("take") or hand back to market
 #   making ("mm"). Market making runs whenever no glide trade is on. See notebooks/weak/NOTES.md.
+# jumpdrift (TELLURIUM, from trader_v4; replaces market making and glide when set): a jump is a 3-tick
+#   move larger than jk x local volatility (bipower variation, which one jump barely inflates; `jump`
+#   coins until the estimate exists). Wait w ticks, then hold the full limit in the direction the price
+#   has moved since 3 ticks after the jump, until H ticks after it. A new jump restarts the clock.
+#   guard (adaptive): every signal is also paper-traded at the touch; skip new trades while fewer than
+#   `min_wins` of the last `n` signals made money (the edge assumes the drift after a jump continues;
+#   on the real days the worst 6 in a row still had 4 winners). None = always trade.
+#   See notebooks/hybrid/NOTES.md.
 # take_edge=100 effectively disables taking. Choices are explained in notebooks/standalone/NOTES.md.
 STANDALONE_GLIDE = dict(J=60, W=20, gmin=15, K=20, flat=0.0, H=300, cool=50, exit="take")
+STANDALONE_JUMP_GUARD = dict(n=6, min_wins=3)
+STANDALONE_JUMPDRIFT = dict(jump=25, jk=5.5, w=20, H=250, guard=STANDALONE_JUMP_GUARD)
 STANDALONE_PARAMS: Dict[str, dict] = {
     "AMETHYST":       dict(fair="fixed", value=10_000, take_edge=1, make_edge=1, skew=0),
     "TOFFEE_CAKE":    dict(fair="ema", span=10, anchor=5_000, anchor_w=0.5, take_edge=8, make_edge=2, skew=0,
                            anchor_span=2000, anchor_gate=20),  # gated adaptive anchor, notebooks/adaptive/NOTES.md
     "PAPER_LANTERNS": dict(fair="trend", span=20, slope_window=100, lead=100, take_edge=1, make_edge=1, skew=2),
     "TELLURIUM":      dict(fair="mid", flow_beta=0.8, flow_decay=0.9, take_edge=100, make_edge=3, skew=5, soft_cap=15,
-                           glide=STANDALONE_GLIDE),
+                           jumpdrift=STANDALONE_JUMPDRIFT),  # was glide=GLIDE (best-366k); notebooks/hybrid/NOTES.md
     "JELLY":          dict(fair="mid", take_edge=100, make_edge=1, skew=0, soft_cap=3),
     "PEANUT_BUTTER":  dict(fair="mid", take_edge=100, make_edge=3, skew=5, soft_cap=10),
 }
@@ -176,6 +186,52 @@ class StandaloneTrader:
                 return gs["side"] * limit
         return None
 
+    # ---------- jump-drift (TELLURIUM, from trader_v4) ----------
+    @staticmethod
+    def jumpdrift_target(mid: float, bid: int, ask: int, pm: dict, j: dict, limit: int) -> int:
+        """Target position after the latest jump: 0 until `w` ticks after it, then the full limit in the
+        direction of the move since 3 ticks after the jump, until `H` ticks after it."""
+        s = pm.setdefault("jd", {})
+        g = j.get("guard")
+
+        def close_paper():
+            # paper result of the signal that just ended, traded at the touch both ways
+            if s.get("pd"):
+                exit_px = bid if s["pd"] > 0 else ask
+                s["out"] = (s.get("out", []) + [s["pd"] * (exit_px - s["pe"])])[-(g["n"] if g else 1):]
+                s["pd"] = 0
+
+        h = (s.get("h", []) + [mid])[-4:]
+        s["h"] = h
+        k = s.get("k", -1)  # ticks since the last jump (-1: none active)
+        thr = j["jump"]
+        if len(h) >= 3:
+            bp = abs(h[-1] - h[-2]) * abs(h[-2] - h[-3])  # bipower variation (Barndorff-Nielsen & Shephard 2006)
+            s["bv"] = bp if s.get("bv") is None else s["bv"] + (bp - s["bv"]) / 500.0
+            if s["bv"] > 0:
+                thr = j["jk"] * (s["bv"] * 1.5707963 * 3) ** 0.5
+        if len(h) == 4 and abs(h[-1] - h[0]) > thr and (k < 0 or k > 5):
+            k, s["ref"] = 0, None
+            close_paper()
+        elif k >= 0:
+            k += 1
+        if k == 3:
+            s["ref"] = mid
+        tgt = 0
+        if j["w"] <= k <= j["H"] and s.get("ref") is not None:
+            if k == j["w"]:
+                s["dir"] = 1 if mid > s["ref"] else -1 if mid < s["ref"] else 0
+                out = s.get("out", [])
+                s["on"] = g is None or len(out) < g["n"] or sum(x > 0 for x in out) >= g["min_wins"]
+                if s["dir"]:
+                    s["pd"], s["pe"] = s["dir"], (ask if s["dir"] > 0 else bid)
+            tgt = s.get("dir", 0) * limit if s.get("on", True) else 0
+        elif k > j["H"]:
+            k = -1
+            close_paper()
+        s["k"] = k
+        return tgt
+
     @staticmethod
     def take_to(product: str, depth: OrderDepth, position: int, target: int) -> List[Order]:
         """Cross the book level by level toward `target`."""
@@ -206,6 +262,11 @@ class StandaloneTrader:
             prm = self.params[product]
             position = state.position.get(product, 0)
             fair = self.fair_value(product, depth, state, mem)  # always run, so its memory stays current
+            if "jumpdrift" in prm:
+                bid, ask = max(depth.buy_orders), min(depth.sell_orders)
+                tgt = self.jumpdrift_target((bid + ask) / 2, bid, ask, mem[product], prm["jumpdrift"], STANDALONE_LIMITS[product])
+                result[product] = self.take_to(product, depth, position, tgt)
+                continue
             if "glide" in prm:
                 mid = (max(depth.buy_orders) + min(depth.sell_orders)) / 2
                 sig = self.glide_signal(mid, mem[product], prm["glide"], STANDALONE_LIMITS[product])
@@ -464,170 +525,227 @@ class BasketTrader:
 
 
 # =====================================================================================
-# OPTIONS  (generated from src/strategies/options.py)
+# SMILE  (generated from src/strategies/smile.py)
 # =====================================================================================
-"""LYCHEE vouchers: market making around a Black-Scholes fair value, delta-hedged with LYCHEE.
+"""LYCHEE vouchers priced off a volatility smile fitted across strikes (the trader_v4 options book).
 
-Findings (notebooks/options/NOTES.md):
-  - Each strike's implied vol is stable within a day; its price wanders ~+-5 coins off that and
-    ~30% of the gap closes within 50 ticks (residual autocorr ~0.5 at 100 ticks).
-  - So fair value = BS(S_now, K, T, slow EMA of that strike's own implied vol). It follows LYCHEE
-    instantly through S, but treats short-lived IV moves as noise to fade.
-  - Vouchers trade ~560 times a day each, always at the touch, so joining the touch fills a lot.
-  - Net option delta is hedged with LYCHEE (limit 200).
-
-Time to expiry: 8 days at the start of day -2, so 5 days at the start of scoring day 1.
-The engine never tells us the day; DAY defaults to 1, and the local backtester calls set_day().
+How it differs from options.py (notebooks/hybrid/NOTES.md has the comparison):
+  - options.py prices each strike off a slow EMA of ITS OWN implied vol. This file fits one smile
+    (implied total vol as a quadratic in log-moneyness, vega-weighted) across all strikes every tick,
+    smooths its three coefficients with a fast EMA, and prices every voucher off that smile.
+  - So a voucher that drifts away from its neighbours is mispriced *now*. The fit borrows information
+    from the other nine strikes, which is why a fast smoothing works here (span 50: 189k over three
+    days), while a fast per-strike EMA loses money (-29k) and a slow smile (span 1,000) only matches
+    options.py (130k).
+  - It works in total volatility (sigma x sqrt(T)), so it never needs the time to expiry.
+  - Relative-value positions are long some strikes and short their neighbours, so the book's net
+    delta stays small (mean |delta| 39) without much LYCHEE hedging. LYCHEE is market-made with a soft
+    cap of 40 and a small skew toward the hedge position; removing it changes PnL by under 1k.
 """
 
 
 
-OPTIONS_STRIKES = [6800, 7000, 7200, 7300, 7400, 7500, 7600, 7750, 7900, 8100]
-OPTIONS_VOUCHERS = {f"VOUCHER_{k}": k for k in OPTIONS_STRIKES}
-OPTIONS_UNDERLYING = "LYCHEE"
-OPTIONS_LIMITS = {OPTIONS_UNDERLYING: 200, **{v: 50 for v in OPTIONS_VOUCHERS}}
-OPTIONS_EXPIRY_DAYS_AT_DAY_MINUS_2 = 8
+SMILE_STRIKES = [6800, 7000, 7200, 7300, 7400, 7500, 7600, 7750, 7900, 8100]
+SMILE_VOUCHERS = {f"VOUCHER_{k}": k for k in SMILE_STRIKES}
+SMILE_UNDERLYING = "LYCHEE"
+SMILE_LIMITS = {SMILE_UNDERLYING: 200, **{v: 50 for v in SMILE_VOUCHERS}}
 
-# Chosen from notebooks/options/03_param_sweep.py (worst training day, checked on day 0).
-OPTIONS_PARAMS = dict(
-    iv_span=1000,     # ticks: EMA span of each strike's implied vol (50 loses badly, 1000 best)
-    take_edge=4.0,    # take a voucher level this far through fair
-    make_edge=0.5,    # never quote closer than this to fair
-    skew=1.0,         # coins of fair shift at full position
-    soft_cap=50,      # max |position| per voucher
-    hedge=True,       # wide band: a tight band (10) just pays LYCHEE's spread; see NOTES.md
-    hedge_band=60,    # rebalance LYCHEE when |target - position| exceeds this (cuts mean |delta| 101 -> 35)
-    min_price=3.0,    # skip vouchers cheaper than this (tick size dominates)
-    take_mode="scaled",  # take threshold = max(take_min, take_k x recent std of (price - fair)); "fixed" = take_edge
-    take_k=0.8,
-    take_min=2.0,
-    resid_span=1000,  # ticks: EMA span for the variance of (price - fair) per voucher
+# smile_span : EMA span (ticks) for the smile's three coefficients
+# min_points : fit only when at least this many strikes have a usable implied vol
+# take       : take a voucher level at least this far through fair; edge: never quote closer than this
+# skew       : fair shift (coins) at the soft cap, against inventory relative to the target
+# LYCHEE     : market-made around its mid, drifting toward -hedge x book delta, soft cap max_pos
+# take_scale (adaptive): track the book's wobble size, the mean |voucher mid - smile fair| over vouchers
+#   worth >= 3 coins (a running mean for the first `warmup` ticks, then an EMA over ~2,000 ticks). The real
+#   days stay at 2.6-3.8. Below `gate`, wobbles are clearly smaller than anything in the data, so the take
+#   threshold shrinks with them: take x wobble / ref, never below `floor`. It is never raised: with 20%
+#   bigger wobbles a 3-coin take was still best. None = fixed take. See notebooks/hybrid/NOTES.md.
+SMILE_TAKE_SCALE = dict(ref=3.15, gate=2.4, floor=2.0, warmup=1000)
+SMILE_PARAMS = dict(
+    smile_span=50, min_points=5,
+    take=3.0, edge=2.0, skew=0.0,
+    lychee=dict(take=2.0, edge=1.0, skew=3.0, max_pos=40, hedge=1.0),
+    take_scale=SMILE_TAKE_SCALE,
 )
 
 
-def _options_ncdf(x: float) -> float:
+def _smile_ncdf(x: float) -> float:
     return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
 
 
-def options_bs_call(S: float, K: float, T: float, sig: float) -> float:
-    if T <= 0 or sig <= 0:
+def smile_bs_call(S: float, K: float, v: float) -> float:
+    """Black-Scholes call, zero rates, in TOTAL volatility v = sigma x sqrt(T)."""
+    if v <= 1e-9:
         return max(S - K, 0.0)
-    sq = sig * math.sqrt(T)
-    d1 = (math.log(S / K) + 0.5 * sq * sq) / sq
-    return S * _options_ncdf(d1) - K * _options_ncdf(d1 - sq)
+    d1 = (math.log(S / K) + 0.5 * v * v) / v
+    return S * _smile_ncdf(d1) - K * _smile_ncdf(d1 - v)
 
 
-def options_bs_delta(S: float, K: float, T: float, sig: float) -> float:
-    if T <= 0 or sig <= 0:
+def smile_bs_delta(S: float, K: float, v: float) -> float:
+    if v <= 1e-9:
         return 1.0 if S > K else 0.0
-    sq = sig * math.sqrt(T)
-    return _options_ncdf((math.log(S / K) + 0.5 * sq * sq) / sq)
+    return _smile_ncdf((math.log(S / K) + 0.5 * v * v) / v)
 
 
-def options_implied_vol(price: float, S: float, K: float, T: float, guess: float = 0.02) -> float:
-    """Bisection on [1e-4, 0.2] (vol per sqrt(day)). Returns None outside no-arbitrage bounds."""
-    if price <= max(S - K, 0.0) + 1e-6 or price >= S:
+def smile_implied_total_vol(price: float, S: float, K: float):
+    """Bisection on total vol. None when the price carries (almost) no time value."""
+    if price <= max(S - K, 0.0) + 0.25 or price >= S:
         return None
-    lo, hi = 1e-4, 0.2
+    lo, hi = 1e-4, 1.0
     for _ in range(40):
-        m = 0.5 * (lo + hi)
-        if options_bs_call(S, K, T, m) > price:
-            hi = m
+        mid = 0.5 * (lo + hi)
+        if smile_bs_call(S, K, mid) > price:
+            hi = mid
         else:
-            lo = m
+            lo = mid
     return 0.5 * (lo + hi)
 
 
-class OptionsTrader:
-    DAY = 1  # scoring day
+def smile_fit_quadratic(xs: List[float], ys: List[float], ws: List[float]):
+    """Weighted least squares y = a + b x + c x^2 (3x3 normal equations, Gaussian elimination)."""
+    s = [0.0] * 5
+    t = [0.0] * 3
+    for x, y, w in zip(xs, ys, ws):
+        p = 1.0
+        for k in range(5):
+            s[k] += w * p
+            if k < 3:
+                t[k] += w * p * y
+            p *= x
+    M = [[s[0], s[1], s[2], t[0]], [s[1], s[2], s[3], t[1]], [s[2], s[3], s[4], t[2]]]
+    for i in range(3):
+        piv = max(range(i, 3), key=lambda r: abs(M[r][i]))
+        if abs(M[piv][i]) < 1e-12:
+            return None
+        M[i], M[piv] = M[piv], M[i]
+        for r in range(3):
+            if r != i:
+                f = M[r][i] / M[i][i]
+                for c in range(i, 4):
+                    M[r][c] -= f * M[i][c]
+    return [M[i][3] / M[i][i] for i in range(3)]
 
+
+def _smile_ema(prev, x, span):
+    return x if prev is None else prev + 2.0 / (span + 1.0) * (x - prev)
+
+
+def _smile_mid(od: OrderDepth) -> float:
+    return 0.5 * (max(od.buy_orders) + min(od.sell_orders))
+
+
+def smile_market_make(product: str, od: OrderDepth, position: int, fair: float, take: float, edge: float,
+                skew: float, max_pos: int, target: float = 0.0) -> List[Order]:
+    """Take levels at least `take` through fair, then join the touch on each side (never closer than
+    `edge` to a reservation price skewed against inventory relative to `target`). Total size on each
+    side never exceeds what the soft cap and the position limit allow."""
+    limit = SMILE_LIMITS[product]
+    cap = min(limit, max_pos)
+    buy_cap = max(0, min(limit - position, cap - position))
+    sell_cap = max(0, min(limit + position, cap + position))
+    orders: List[Order] = []
+    asks = sorted(od.sell_orders.items())
+    bids = sorted(od.buy_orders.items(), reverse=True)
+    taken_ask, taken_bid = set(), set()
+    pos_after = position
+    for px, vol in asks:
+        if buy_cap <= 0 or px > fair - take:
+            break
+        q = min(-vol, buy_cap)
+        orders.append(Order(product, px, q)); buy_cap -= q; pos_after += q; taken_ask.add(px)
+    for px, vol in bids:
+        if sell_cap <= 0 or px < fair + take:
+            break
+        q = min(vol, sell_cap)
+        orders.append(Order(product, px, -q)); sell_cap -= q; pos_after -= q; taken_bid.add(px)
+
+    reservation = fair - skew * (pos_after - target) / cap
+    rem_bids = [px for px, _ in bids if px not in taken_bid]
+    rem_asks = [px for px, _ in asks if px not in taken_ask]
+    bb = rem_bids[0] if rem_bids else math.floor(fair) - 1
+    ba = rem_asks[0] if rem_asks else math.ceil(fair) + 1
+    bid_px = min(bb, math.floor(reservation - edge))
+    ask_px = max(ba, math.ceil(reservation + edge))
+    if asks:
+        bid_px = min(bid_px, asks[0][0] - 1)  # a resting quote never crosses the book
+    if bids:
+        ask_px = max(ask_px, bids[0][0] + 1)
+    if bid_px >= ask_px:
+        bid_px, ask_px = ask_px - 1, bid_px + 1
+    if buy_cap > 0:
+        orders.append(Order(product, int(bid_px), int(buy_cap)))
+    if sell_cap > 0:
+        orders.append(Order(product, int(ask_px), -int(sell_cap)))
+    return orders
+
+
+class SmileTrader:
     def __init__(self, params: dict = None):
-        self.params = dict(OPTIONS_PARAMS, **(params or {}))
-        self.day = self.DAY
-
-    def set_day(self, day: int):
-        self.day = day
-
-    def tte(self, timestamp: int) -> float:
-        return OPTIONS_EXPIRY_DAYS_AT_DAY_MINUS_2 - (self.day + 2) - timestamp / 1_000_000
-
-    def quote(self, product: str, depth: OrderDepth, position: int, fair: float, take_edge: float) -> List[Order]:
-        prm = self.params
-        limit = OPTIONS_LIMITS[product]
-        cap = min(limit, prm["soft_cap"])
-        fair_adj = fair - prm["skew"] * position / limit
-        buy_cap, sell_cap = max(0, cap - position), max(0, cap + position)
-        orders: List[Order] = []
-        for ask in sorted(depth.sell_orders):
-            if buy_cap <= 0 or ask > fair_adj - take_edge:
-                break
-            q = min(buy_cap, -depth.sell_orders[ask])
-            orders.append(Order(product, ask, q)); buy_cap -= q
-        for bid in sorted(depth.buy_orders, reverse=True):
-            if sell_cap <= 0 or bid < fair_adj + take_edge:
-                break
-            q = min(sell_cap, depth.buy_orders[bid])
-            orders.append(Order(product, bid, -q)); sell_cap -= q
-        best_bid, best_ask = max(depth.buy_orders), min(depth.sell_orders)
-        bid_px = int(min(best_bid, fair_adj - prm["make_edge"]) // 1)
-        ask_px = int(-((-max(best_ask, fair_adj + prm["make_edge"])) // 1))
-        if buy_cap > 0:
-            orders.append(Order(product, bid_px, buy_cap))
-        if sell_cap > 0:
-            orders.append(Order(product, ask_px, -sell_cap))
-        return orders
+        self.params = dict(SMILE_PARAMS, **(params or {}))
 
     def run(self, state: TradingState):
         prm = self.params
         mem = json.loads(state.traderData) if state.traderData else {}
-        ivs = mem.setdefault("iv", {})
         result: Dict[str, List[Order]] = {}
-
-        und = state.order_depths.get(OPTIONS_UNDERLYING)
+        ods = state.order_depths
+        und = ods.get(SMILE_UNDERLYING)
         if und is None or not und.buy_orders or not und.sell_orders:
             return result, 0, json.dumps(mem)
-        S = (max(und.buy_orders) + min(und.sell_orders)) / 2
-        T = self.tte(state.timestamp)
-        alpha = 2 / (prm["iv_span"] + 1)
+        S = _smile_mid(und)
 
+        # 1) implied total vol for every voucher with a usable price, weighted by vega
+        xs, ys, ws, info = [], [], [], {}
+        for sym, K in SMILE_VOUCHERS.items():
+            od = ods.get(sym)
+            if od is None or not od.buy_orders or not od.sell_orders:
+                continue
+            m = math.log(K / S)
+            info[sym] = (K, m)
+            v = smile_implied_total_vol(_smile_mid(od), S, K)
+            if v is not None:
+                d1 = (-m + 0.5 * v * v) / v
+                xs.append(m); ys.append(v); ws.append(max(S * math.exp(-0.5 * d1 * d1) / math.sqrt(2 * math.pi), 1e-6))
+
+        # 2) fit the smile, smooth its coefficients across ticks
+        coef = smile_fit_quadratic(xs, ys, ws) if len(xs) >= prm["min_points"] else None
+        if coef is not None:
+            prev = mem.get("smile")
+            mem["smile"] = coef if prev is None else [_smile_ema(prev[i], coef[i], prm["smile_span"]) for i in range(3)]
+        coef = mem.get("smile")
+        if coef is None:
+            return result, 0, json.dumps(mem)
+
+        # 3) price each voucher off the smile
+        fair, delta = {}, {}
+        for sym, (K, m) in info.items():
+            v = max(coef[0] + coef[1] * m + coef[2] * m * m, 1e-4)
+            fair[sym], delta[sym] = smile_bs_call(S, K, v), smile_bs_delta(S, K, v)
+
+        # 4) take threshold, shrunk only if wobbles get clearly smaller than on the real days
+        take = prm["take"]
+        ts = prm.get("take_scale")
+        if ts:
+            dev = [abs(_smile_mid(ods[sym]) - fair[sym]) for sym in fair if _smile_mid(ods[sym]) >= 3]
+            if dev:
+                n = mem.get("wn", 0) + 1
+                wob = mem.get("wob", 0.0)
+                wob += (sum(dev) / len(dev) - wob) / min(n, ts["warmup"])
+                mem["wob"], mem["wn"] = wob, n
+                if n >= ts["warmup"] and wob < ts["gate"]:
+                    take = max(ts["floor"], prm["take"] * wob / ts["ref"])
+
+        # 5) quote each voucher; add up the book's delta
         net_delta = 0.0
-        for product, K in OPTIONS_VOUCHERS.items():
-            depth = state.order_depths.get(product)
-            pos = state.position.get(product, 0)
-            if depth is None or not depth.buy_orders or not depth.sell_orders:
-                continue
-            vmid = (max(depth.buy_orders) + min(depth.sell_orders)) / 2
-            iv_now = options_implied_vol(vmid, S, K, T)
-            iv = ivs.get(product)
-            if iv_now is not None:
-                iv = iv_now if iv is None else alpha * iv_now + (1 - alpha) * iv
-                ivs[product] = iv
-            if iv is None:
-                continue
-            net_delta += pos * options_bs_delta(S, K, T, iv)
-            if vmid < prm["min_price"]:
-                continue
-            fair = options_bs_call(S, K, T, iv)
-            take = prm["take_edge"]
-            if prm["take_mode"] == "scaled":
-                # how big are this voucher's wobbles right now? take only the unusually large ones
-                rv = mem.setdefault("rv", {})
-                resid = vmid - fair
-                a = 2 / (prm["resid_span"] + 1)
-                rv[product] = a * resid * resid + (1 - a) * rv.get(product, resid * resid)
-                take = max(prm["take_min"], prm["take_k"] * math.sqrt(rv[product]))
-            result[product] = self.quote(product, depth, pos, fair, take)
+        for sym in info:
+            pos = state.position.get(sym, 0)
+            net_delta += pos * delta[sym]
+            result[sym] = smile_market_make(sym, ods[sym], pos, fair[sym], take, prm["edge"], prm["skew"], SMILE_LIMITS[sym])
 
-        if prm["hedge"]:
-            pos_u = state.position.get(OPTIONS_UNDERLYING, 0)
-            target = max(-OPTIONS_LIMITS[OPTIONS_UNDERLYING], min(OPTIONS_LIMITS[OPTIONS_UNDERLYING], -round(net_delta)))
-            diff = target - pos_u
-            if abs(diff) > prm["hedge_band"]:
-                if diff > 0:
-                    result[OPTIONS_UNDERLYING] = [Order(OPTIONS_UNDERLYING, min(und.sell_orders), diff)]
-                else:
-                    result[OPTIONS_UNDERLYING] = [Order(OPTIONS_UNDERLYING, max(und.buy_orders), diff)]
-
+        # 6) LYCHEE: market-make around its mid, drifting toward the delta-hedge position
+        ly = prm["lychee"]
+        target = max(-SMILE_LIMITS[SMILE_UNDERLYING], min(SMILE_LIMITS[SMILE_UNDERLYING], -ly["hedge"] * net_delta))
+        result[SMILE_UNDERLYING] = smile_market_make(SMILE_UNDERLYING, und, state.position.get(SMILE_UNDERLYING, 0), S, ly["take"],
+                                         ly["edge"], ly["skew"], ly["max_pos"], target=target)
         return result, 0, json.dumps(mem)
 
 # =====================================================================================
@@ -640,12 +758,14 @@ class Trader:
             "standalone": StandaloneTrader(),
             "pearls": PearlsTrader(),
             "basket": BasketTrader(),
-            "options": OptionsTrader(),
+            "smile": SmileTrader(),
         }
 
     def set_day(self, day):
         """Only called by our local backtester; the real engine never tells us the day."""
-        self.groups["options"].set_day(day)
+        for trader in self.groups.values():
+            if hasattr(trader, "set_day"):
+                trader.set_day(day)
 
     def run(self, state):
         try:

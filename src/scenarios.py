@@ -124,16 +124,26 @@ def _iv(price, S, K, T):
     return np.where(bad, np.nan, iv)
 
 
-def reprice_options(prices, trades, day: int, lychee_delta: np.ndarray = None, iv_mult: float = 1.0):
+def shuffle_moves(prices, trades, product, seed: int):
+    """Same tick-to-tick moves in a random order (same start, end and volatility). Single-tick jumps
+    survive, but whatever normally follows them (TELLURIUM's post-jump glide) is gone."""
+    rng = np.random.default_rng(seed)
+    mid = pd.Series(mid_path(prices, product)).ffill().bfill().to_numpy()
+    new = mid[0] + np.r_[0.0, np.cumsum(rng.permutation(np.diff(mid)))]
+    shift(prices, trades, product, np.round(new - mid).astype(int))
+
+
+def reprice_options(prices, trades, day: int, lychee_delta: np.ndarray = None, iv_mult=1.0):
     """Move LYCHEE by lychee_delta[tick] and/or scale implied vol; re-price every voucher's book and
-    trades by the Black-Scholes change in its value (rounded to whole ticks)."""
+    trades by the Black-Scholes change in its value (rounded to whole ticks).
+    iv_mult: one number for every voucher, or {voucher: per-tick multiplier array}."""
     S = pd.Series(mid_path(prices, "LYCHEE")).ffill().bfill().to_numpy()
     dS = lychee_delta if lychee_delta is not None else np.zeros(TICKS, dtype=int)
     T = 8 - (day + 2) - np.arange(TICKS) * 100 / 1e6
     for k, v in zip(STRIKES, VOUCHERS):
         old = pd.Series(mid_path(prices, v)).ffill().bfill().to_numpy()
         iv = pd.Series(_iv(old, S, k, T)).ffill().bfill().fillna(0.02).to_numpy()
-        new = _bs(S + dS, k, T, iv * iv_mult)
+        new = _bs(S + dS, k, T, iv * (iv_mult[v] if isinstance(iv_mult, dict) else iv_mult))
         shift(prices, trades, v, np.round(new - _bs(S, k, T, iv)).astype(int))
     if lychee_delta is not None:
         shift(prices, trades, "LYCHEE", dS)
@@ -226,6 +236,24 @@ def _sc_iv(mult):
     return f
 
 
+def _sc_iv_wander(daily_sd, seed=1):
+    """Each strike's implied vol drifts on its own (independent random walks), so a gap between a
+    strike and its neighbours need not close."""
+    def f(p, t, day):
+        rng = np.random.default_rng(seed * 10 + day + 2)
+        mult = {v: 1 + np.cumsum(rng.normal(0, daily_sd / np.sqrt(TICKS), TICKS)) for v in VOUCHERS}
+        reprice_options(p, t, day, iv_mult=mult)
+        return p, t
+    return f
+
+
+def _sc_shuffle(product, seed):
+    def f(p, t, day):
+        shuffle_moves(p, t, product, seed * 10 + day + 2)
+        return p, t
+    return f
+
+
 def _sc_bootstrap(seed):
     def f(p, t, day):
         return bootstrap(p, t, seed=seed * 10 + day + 2)
@@ -255,6 +283,11 @@ SCENARIOS: Dict[str, Tuple[str, Callable]] = {
     "lychee_vol_x1.5": ("LYCHEE 50% more volatile, vouchers re-priced at the same implied vol", _sc_lychee_vol(1.5)),
     "iv_x1.2": ("every voucher priced at 20% higher implied vol", _sc_iv(1.2)),
     "iv_x0.8": ("every voucher priced at 20% lower implied vol", _sc_iv(0.8)),
+    "iv_wander_5pct": ("each strike's implied vol wanders on its own (~5% a day), gaps between strikes persist", _sc_iv_wander(0.05)),
+    "iv_wander_10pct": ("same, ~10% a day", _sc_iv_wander(0.10)),
+    # TELLURIUM's post-jump glide removed
+    "tellurium_no_drift_1": ("TELLURIUM's tick moves shuffled: jumps kept, the drift after them gone (seed 1)", _sc_shuffle("TELLURIUM", 1)),
+    "tellurium_no_drift_2": ("same, seed 2", _sc_shuffle("TELLURIUM", 2)),
     # reshuffled time
     "bootstrap_1": ("non-option products: 2,500-tick blocks reordered (seed 1)", _sc_bootstrap(1)),
     "bootstrap_2": ("same, seed 2", _sc_bootstrap(2)),
