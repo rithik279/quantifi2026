@@ -13,6 +13,11 @@ UTEFA QuantiFi 2026, Team #21. We're building one `trader.py` (an IMC Prosperity
 - Keep imports minimal (standard library and `datamodel`; numpy and pandas haven't been confirmed for the backtester).
 - Each strategy must be self-contained, because everything merges into a single submission file.
 
+## Backtest and build
+- Write strategies in `src/strategies/<ws>.py` (class with `products` and `run(state, mem)`); size orders with `OrderSet` from `strategies/common.py`.
+- `python src/backtester.py src/trader.py [--days 0] [--match all|worse|none]`, then compare `--match all` with `--match worse` before trusting an edge.
+- `python src/build_submission.py` writes the upload file `submission/trader.py`. Never edit that file by hand.
+
 ## Data
 `data/raw/{prices,trades}_day_{-2,-1,0}.csv`, **semicolon-separated** (`pd.read_csv(path, sep=";")`). Day 1 is the scoring day, which we don't have. Write derived data to `data/processed/` (git-ignored).
 

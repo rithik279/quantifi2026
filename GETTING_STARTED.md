@@ -18,6 +18,7 @@ We're building a single Python file with a `Trader` class whose `run(state)` met
 
 | Path | What's there | Read it when |
 |---|---|---|
+| `notebooks/PROGRESS.md` | Team status: what's done, PnL so far, open decisions, next steps | Every time you sit down |
 | `docs/context/Official Information/` | Official wiki: rules, product list, `TradingState`, how fills work | First. It's short, and it settles most rules questions |
 | `docs/context/GeneratedDocs/ClaudeInitialExplaination.pdf` | First-pass analysis of every product, a good map of the work | Before picking a workstream |
 | `docs/context/GeneratedDocs/UTEFA QuantiFi 2026_Initialbrainstorm.pdf` | Team brainstorm and principles | Once |
@@ -47,6 +48,8 @@ Add to this list as you hit new ones, so nobody loses time on the same thing twi
 - **Fills are generous:** your passive order fills if a real historical trade happened at your price or a worse one for the other side. Backtest PnL will overstate live PnL.
 - **No lookahead:** `run()` only sees the current tick. Anything you remember has to go through `traderData`, a JSON string.
 - **One file at the end:** the submission is a single `trader.py`, so keep each strategy self-contained so it's easy to merge.
+- **Equal-price fills carry the easy PnL:** the AMETHYST examples make +1,612 over 3 days under the official rule, and **0** under `--match worse`. Every fill came from a market trade at exactly our price. The official scorer uses the generous rule, so this counts, but compare both modes before trusting an edge.
+- **The trader can't see the day:** `TradingState` has `timestamp` but no day number. Anything that depends on it (option time to expiry) has to assume scoring day 1 (5 days to expiry at its start), and needs a setting to backtest days -2..0.
 
 ## 4. Workstreams
 
@@ -59,7 +62,30 @@ Splitting by product group lets us work in parallel, but the groups aren't reall
 | `options` | LYCHEE, VOUCHER_* (10 strikes) | Black-Scholes implied vol, smile relative value, delta-hedge with LYCHEE | |
 | `pearls` | WHITE, BLACK, GOLDEN, PINK, BLUE_PEARLS | The five prices sum to ~50,000. PINK corrects the sum, and GOLDEN moves in steps. | |
 
-## 5. Starting work on a branch
+## 5. Backtesting and building the submission
+
+The shared pieces live in `src/`:
+
+| File | What it does |
+|---|---|
+| `src/strategies/common.py` | `LIMITS`, `best_bid`/`best_ask`/`mid_price`, `OrderSet` (clips orders so possible fills never break a limit) and `market_make` (take what's mispriced, then quote inside the spread around a fair value you supply) |
+| `src/strategies/<ws>.py` | One class per workstream (`products`, `run(state, mem)`). The stubs return no orders, so fill yours in |
+| `src/trader.py` | Routes each product to its strategy, gives each strategy its own slice of `traderData` (`mem`), isolates crashes, clips to limits |
+| `src/backtester.py` | Local copy of the official fill rule. Prints PnL per product and day |
+| `src/build_submission.py` | Pastes everything into `submission/trader.py`. Fails on non-stdlib imports or name clashes between files |
+
+```bash
+python src/backtester.py src/trader.py                 # all three days
+python src/backtester.py src/trader.py --days 0 --match worse
+python src/build_submission.py                         # then upload submission/trader.py
+python src/backtester.py submission/trader.py          # must match src/trader.py
+```
+
+`--match` sets how resting orders fill against market trades: `all` (official: equal or worse price), `worse` (strictly worse only) or `none` (only orders that cross the book). `--products A B` simulates only those products, which is much faster when you're tuning one. `--save` writes per-tick PnL to `data/processed/` for plots. `--verbose` shows your prints. Crashes always show. Each day runs on its own, from a flat position, like the scoring day. About 2 s per day with no strategies.
+
+Inside your strategy, size orders with `OrderSet` and keep anything you need between ticks in `mem` (small and JSON-serialisable). Keep module-level names unique (prefix helpers, e.g. `pearls_fair_value`), because all files end up in one.
+
+## 6. Starting work on a branch
 
 ```bash
 git checkout main
@@ -83,7 +109,7 @@ git push -u origin <yourname>/<workstream>
 
 When a strategy is ready, open a pull request into `main` and ask someone else to review it. A second set of eyes catches lookahead bugs and limit mistakes fast. Mostly keeping changes inside your own workstream's folders keeps merges painless. For shared pieces like the backtester, common helpers or the final `trader.py`, a quick heads-up in the group chat avoids two people building the same thing.
 
-## 6. Working together
+## 7. Working together
 
 - **Share findings early.** A rough chart or a one-line "PINK seems to lead the sum" in the chat is worth more than a polished result two days later. Someone else's group may depend on it.
 - **Build shared tools once.** A local backtester that copies the official fill rule, plus common order-book helpers, will help every workstream. If you start on one, say so, and put it in `src/` for everyone.
@@ -108,7 +134,7 @@ Keep a running log at `notebooks/<workstream>/NOTES.md`. Add a short entry whene
 - **Commit diligently.** Commit small and often, with messages that say what changed *and* why ("Widen TELLURIUM quotes: informed flow was picking us off"). Push your branch at the end of every session, so nothing lives only on one laptop and teammates can see where you are.
 - **Save the evidence.** When a chart or table convinces you of something, save it to `outputs/<workstream>/` and link it from your notes. Those become the abstract's figures.
 
-## 7. Notes for coding agents
+## 8. Notes for coding agents
 
 - Read `docs/context/Official Information/` and section 3 above before writing any trader code.
 - Strategy code must only import what the backtester allows: the standard library, `datamodel`, and possibly `numpy` and `pandas` (confirm this with the organizers).
