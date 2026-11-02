@@ -35,7 +35,12 @@ Upload from the `rithik/robustness` branch: it has the latest parameters and the
 | `best-357k` | TELLURIUM post-jump glide | 356,991 | ~357k |
 | `best-361k` (`rithik/weak-products`) | GOLDEN_PEARLS slide | 360,970 (120,906 / 127,082 / 112,982) | ~361k |
 | `rithik/adaptive` | gated adaptive TOFFEE anchor, gated pearl-sum target, scaled options threshold (on top of `best-316k`) | 326,988 (112,872 / 116,264 / 97,852) | not checked |
-| **`rithik/combined`** | `best-361k` + `rithik/adaptive` (worst scenario 290.6k → 310.0k, scenario average 351.5k → 363.2k) | **361,364** (121,694 / 129,878 / 109,792) | **~366k** |
+| `best-366k` (`rithik/combined`) | `best-361k` + `rithik/adaptive` (worst scenario 290.6k → 310.0k, scenario average 351.5k → 363.2k) | 361,364 (121,694 / 129,878 / 109,792) | ~366k |
+| `trader_v4.py` (teammate's version, not in git) | smile options book, TELLURIUM jump-drift, its own versions of the rest | 436,576 (146,660 / 150,780 / 139,136) | ~436k |
+| **`rithik/hybrid`** `trader.py` | `best-366k` with trader_v4's smile options and TELLURIUM jump-drift, plus two adaptive guards that never fire on the real days (`notebooks/hybrid/NOTES.md`) | **465,178** (156,772 / 159,836 / 148,570) | to check |
+| `rithik/hybrid` `trader_plain.py` | the same without the two guards (`--set standalone.JUMP_GUARD=None smile.TAKE_SCALE=None`) | 465,178, identical per product | to check |
+| `trader_v7_2.py` (teammate's merged file, `submission/other_people_code/`) | re-tuned TOFFEE_CAKE and PAPER_LANTERNS, pearl market makers, no `market_trades` reads | 483,159 | 483,159 |
+| **FINAL `Team21_Trader.py`** (= `submission/trader.py`, v10) | v7_2 + trader_4's JELLY/PEANUT_BUTTER quoter + adaptive pearl "closer" detector (`notebooks/hybrid/NOTES.md`) | **487,376** (163,932 / 168,616 / 154,828) | submitted Nov 1 |
 
 **Results so far (2026-10-30):** #6 `submission/trader.py` scored **316,088** on the official site, versus 326,594 locally (3.2% lower). Our backtester is well calibrated. Uploads #2–#5 would show which group accounts for the gap.
 
@@ -54,5 +59,5 @@ For each upload, write down:
 
 ## Before the final submission (Nov 1, 11:59 PM)
 - [ ] Rebuild `trader.py` after the last strategy change, and re-run the local check.
-- [ ] `OptionsTrader.DAY` must be 1, which is the default.
+- [ ] The hybrid's options book (`smile.py`) works in total volatility and never needs the day. `options.py` (`best-366k`) needs `OptionsTrader.DAY` = 1, which is its default.
 - [ ] Upload the final `trader.py` once more on the site and confirm no errors.
