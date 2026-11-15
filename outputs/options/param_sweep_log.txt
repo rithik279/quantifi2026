@@ -1,0 +1,40 @@
+360 backtests (36 parameter sets x 10 strikes)
+
+Top 10 global parameter sets by worst training day (d0 = OOS):
+                                                                                     d_2      d_1       d0  train_min     total
+key                                                                                                                           
+{'iv_span': 1000, 'take_edge': 4, 'make_edge': 0.5, 'soft_cap': 50, 'skew': 1}  43940.0  37911.0  44732.0    37911.0  126584.0
+{'iv_span': 1000, 'take_edge': 4, 'make_edge': 1.5, 'soft_cap': 50, 'skew': 1}  44195.0  36763.0  44342.0    36763.0  125300.0
+{'iv_span': 1000, 'take_edge': 2, 'make_edge': 0.5, 'soft_cap': 50, 'skew': 1}  33976.0  46245.0  50094.0    33976.0  130316.0
+{'iv_span': 1000, 'take_edge': 2, 'make_edge': 1.5, 'soft_cap': 50, 'skew': 1}  32934.0  44756.0  48731.0    32934.0  126422.0
+{'iv_span': 200, 'take_edge': 4, 'make_edge': 1.5, 'soft_cap': 50, 'skew': 1}   31938.0  35936.0  29784.0    31938.0   97658.0
+{'iv_span': 200, 'take_edge': 4, 'make_edge': 0.5, 'soft_cap': 50, 'skew': 1}   28192.0  35096.0  26616.0    28192.0   89903.0
+{'iv_span': 1000, 'take_edge': 1, 'make_edge': 0.5, 'soft_cap': 50, 'skew': 1}  21536.0  36398.0  45398.0    21536.0  103332.0
+{'iv_span': 1000, 'take_edge': 1, 'make_edge': 1.5, 'soft_cap': 50, 'skew': 1}  21052.0  34814.0  44180.0    21052.0  100045.0
+{'iv_span': 1000, 'take_edge': 4, 'make_edge': 0.5, 'soft_cap': 25, 'skew': 1}  22792.0  20260.0  23757.0    20260.0   66809.0
+{'iv_span': 1000, 'take_edge': 4, 'make_edge': 1.5, 'soft_cap': 25, 'skew': 1}  22932.0  19040.0  23884.0    19040.0   65856.0
+
+Bottom 3:
+                                                                                   d_2      d_1       d0  train_min     total
+key                                                                                                                         
+{'iv_span': 50, 'take_edge': 1, 'make_edge': 0.5, 'soft_cap': 25, 'skew': 1} -27631.0 -14284.0 -16649.0   -27631.0  -58564.0
+{'iv_span': 50, 'take_edge': 1, 'make_edge': 1.5, 'soft_cap': 50, 'skew': 1} -46621.0 -24042.0 -28477.0   -46621.0  -99140.0
+{'iv_span': 50, 'take_edge': 1, 'make_edge': 0.5, 'soft_cap': 50, 'skew': 1} -49607.0 -24154.0 -30636.0   -49607.0 -104397.0
+
+Best set {'iv_span': 1000, 'take_edge': 4, 'make_edge': 0.5, 'soft_cap': 50, 'skew': 1} by strike:
+                  d_2      d_1       d0
+product                               
+VOUCHER_6800 -2737.0  -3526.0   5590.0
+VOUCHER_7000  3145.0  -5102.0   5920.0
+VOUCHER_7200  5200.0   3564.0   5387.0
+VOUCHER_7300  5642.0  11684.0   8456.0
+VOUCHER_7400  8492.0  12929.0  10813.0
+VOUCHER_7500  8689.0   7886.0   3697.0
+VOUCHER_7600  9858.0   5678.0   2557.0
+VOUCHER_7750  3391.0   4132.0   1446.0
+VOUCHER_7900  1798.0    544.0    794.0
+VOUCHER_8100   463.0    122.0     72.0
+
+real	11m58.125s
+user	0m0.031s
+sys	0m0.031s

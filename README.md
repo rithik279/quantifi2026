@@ -1,5 +1,31 @@
 # QuantiFi 2026
 
+## 🏆 1st place out of 32 teams
+
+**Team #21 won the UTEFA QuantiFi 2026 algorithmic trading competition (National Bank).**
+
+Team: Selena Zhang, Michael Xu, Jeffery Hu, Rithik Singh.
+
+**What we built:** one Python trader covering every product in the competition, in four families:
+- **Market making on single products** (AMETHYST, TOFFEE_CAKE, PAPER_LANTERNS, JELLY, PEANUT_BUTTER), each with its own fair value.
+- **The fruit basket** against its contents.
+- **An options book on LYCHEE vouchers**, priced off a fitted volatility smile.
+- **The five pearls**, using the rule that their prices sum to 50,000.
+
+Plus two directional overlays: the TELLURIUM post-jump drift and the GOLDEN_PEARLS plateaus.
+
+**How we got there:**
+- **Our own backtester** that mirrors the official fill rules. It stayed within about 3% of the official site.
+- **Stress testing:** 24 edited "what might the judges change?" scenarios, fill-rate stress, leave-one-day-out checks and overlap-aware error bars on every claim. We kept edges we could explain and dropped ones we couldn't.
+- **Steady iteration:** 316k → 357k → 361k → 366k on the official site, then a merged team version at **487,376** locally on days −2..0.
+
+**Where to look:**
+- **Final trader:** [`submission/Team21_Trader.py`](submission/Team21_Trader.py). It's frozen, and its known limitations are in [`submission/README.md`](submission/README.md).
+- **Abstract:** [`submission/Team21_Abstract.pdf`](submission/Team21_Abstract.pdf).
+- **Research and decisions:** `notebooks/*/NOTES.md`.
+
+---
+
 Workspace for the 2026 QuantiFi competition (UofT).
 
 ## Layout

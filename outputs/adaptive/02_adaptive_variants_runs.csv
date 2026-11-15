@@ -1,0 +1,141 @@
+unit,variant,scenario,total,worst_day
+OPTIONS_BOOK,fixed 4 coins,real,130195.0,39994.5
+OPTIONS_BOOK,fixed 4 coins,iv_x0.8,66310.5,18715.0
+OPTIONS_BOOK,fixed 4 coins,iv_x1.2,200271.5,53242.0
+OPTIONS_BOOK,fixed 4 coins,lychee_vol_x1.5,142880.0,43833.0
+OPTIONS_BOOK,scaled k=0.6 min=2.0,real,126682.5,34138.0
+OPTIONS_BOOK,scaled k=0.6 min=2.0,iv_x0.8,81935.5,23482.0
+OPTIONS_BOOK,scaled k=0.6 min=2.0,iv_x1.2,197440.5,59842.0
+OPTIONS_BOOK,scaled k=0.6 min=2.0,lychee_vol_x1.5,138196.0,37000.0
+OPTIONS_BOOK,scaled k=0.8 min=2.0,real,130589.5,36804.5
+OPTIONS_BOOK,scaled k=0.8 min=2.0,iv_x0.8,79189.5,20566.5
+OPTIONS_BOOK,scaled k=0.8 min=2.0,iv_x1.2,198586.5,59622.0
+OPTIONS_BOOK,scaled k=0.8 min=2.0,lychee_vol_x1.5,140044.0,40617.5
+OPTIONS_BOOK,scaled k=1.0 min=2.0,real,121612.5,38356.0
+OPTIONS_BOOK,scaled k=1.0 min=2.0,iv_x0.8,78467.0,24520.5
+OPTIONS_BOOK,scaled k=1.0 min=2.0,iv_x1.2,181751.5,57285.5
+OPTIONS_BOOK,scaled k=1.0 min=2.0,lychee_vol_x1.5,128615.5,36411.5
+OPTIONS_BOOK,scaled k=0.8 min=3.0,real,127988.0,37544.0
+OPTIONS_BOOK,scaled k=0.8 min=3.0,iv_x0.8,82213.5,22886.5
+OPTIONS_BOOK,scaled k=0.8 min=3.0,iv_x1.2,191566.0,58580.5
+OPTIONS_BOOK,scaled k=0.8 min=3.0,lychee_vol_x1.5,132567.5,40456.5
+TOFFEE_CAKE,"fixed 5,000",real,70099.0,21245.0
+TOFFEE_CAKE,"fixed 5,000",toffee_+25,26588.0,7952.0
+TOFFEE_CAKE,"fixed 5,000",toffee_+50,3896.0,-2154.0
+TOFFEE_CAKE,"fixed 5,000",toffee_-50,-253.0,-1522.0
+TOFFEE_CAKE,"fixed 5,000",toffee_+50_midday,31988.0,8934.0
+TOFFEE_CAKE,"fixed 5,000",toffee_drift_+100,3933.0,-1102.0
+TOFFEE_CAKE,"fixed 5,000",mirror,70099.0,21245.0
+TOFFEE_CAKE,"fixed 5,000",vol_x0.6,53064.0,16390.0
+TOFFEE_CAKE,"fixed 5,000",vol_x1.5,152452.0,49253.0
+TOFFEE_CAKE,"fixed 5,000",bootstrap_1,82613.0,21875.0
+TOFFEE_CAKE,"fixed 5,000",bootstrap_2,78390.0,22853.0
+TOFFEE_CAKE,"fixed 5,000",bootstrap_3,68130.0,20893.0
+TOFFEE_CAKE,adaptive span 500,real,46477.0,13425.0
+TOFFEE_CAKE,adaptive span 500,toffee_+25,47467.0,12626.0
+TOFFEE_CAKE,adaptive span 500,toffee_+50,47532.0,12472.0
+TOFFEE_CAKE,adaptive span 500,toffee_-50,39570.0,11031.0
+TOFFEE_CAKE,adaptive span 500,toffee_+50_midday,45171.0,11695.0
+TOFFEE_CAKE,adaptive span 500,toffee_drift_+100,52519.0,13710.0
+TOFFEE_CAKE,adaptive span 500,mirror,46477.0,13425.0
+TOFFEE_CAKE,adaptive span 500,vol_x0.6,30894.5,6635.0
+TOFFEE_CAKE,adaptive span 500,vol_x1.5,133258.0,33932.0
+TOFFEE_CAKE,adaptive span 500,bootstrap_1,68289.0,14255.0
+TOFFEE_CAKE,adaptive span 500,bootstrap_2,50549.0,13079.0
+TOFFEE_CAKE,adaptive span 500,bootstrap_3,40955.0,11130.0
+TOFFEE_CAKE,adaptive span 1000,real,58779.0,16353.0
+TOFFEE_CAKE,adaptive span 1000,toffee_+25,59996.0,17691.0
+TOFFEE_CAKE,adaptive span 1000,toffee_+50,61239.0,18180.0
+TOFFEE_CAKE,adaptive span 1000,toffee_-50,52049.0,16744.0
+TOFFEE_CAKE,adaptive span 1000,toffee_+50_midday,54671.0,13135.0
+TOFFEE_CAKE,adaptive span 1000,toffee_drift_+100,55591.5,12693.0
+TOFFEE_CAKE,adaptive span 1000,mirror,58779.0,16353.0
+TOFFEE_CAKE,adaptive span 1000,vol_x0.6,37583.5,11971.0
+TOFFEE_CAKE,adaptive span 1000,vol_x1.5,148095.0,39486.0
+TOFFEE_CAKE,adaptive span 1000,bootstrap_1,77197.0,18974.0
+TOFFEE_CAKE,adaptive span 1000,bootstrap_2,64341.0,16841.0
+TOFFEE_CAKE,adaptive span 1000,bootstrap_3,51136.0,14432.0
+TOFFEE_CAKE,adaptive span 2000,real,61185.0,18989.0
+TOFFEE_CAKE,adaptive span 2000,toffee_+25,64621.0,19268.0
+TOFFEE_CAKE,adaptive span 2000,toffee_+50,58970.0,19320.0
+TOFFEE_CAKE,adaptive span 2000,toffee_-50,53407.0,14560.0
+TOFFEE_CAKE,adaptive span 2000,toffee_+50_midday,53990.0,13785.0
+TOFFEE_CAKE,adaptive span 2000,toffee_drift_+100,61029.0,14255.0
+TOFFEE_CAKE,adaptive span 2000,mirror,61185.0,18989.0
+TOFFEE_CAKE,adaptive span 2000,vol_x0.6,45019.5,12287.0
+TOFFEE_CAKE,adaptive span 2000,vol_x1.5,142353.0,42390.0
+TOFFEE_CAKE,adaptive span 2000,bootstrap_1,80891.0,17350.0
+TOFFEE_CAKE,adaptive span 2000,bootstrap_2,58956.0,17335.0
+TOFFEE_CAKE,adaptive span 2000,bootstrap_3,53843.0,14371.0
+TOFFEE_CAKE,adaptive span 4000,real,64456.0,17816.0
+TOFFEE_CAKE,adaptive span 4000,toffee_+25,66999.0,19038.0
+TOFFEE_CAKE,adaptive span 4000,toffee_+50,64465.0,19746.0
+TOFFEE_CAKE,adaptive span 4000,toffee_-50,43417.0,11938.0
+TOFFEE_CAKE,adaptive span 4000,toffee_+50_midday,60014.5,15272.0
+TOFFEE_CAKE,adaptive span 4000,toffee_drift_+100,50692.0,10375.0
+TOFFEE_CAKE,adaptive span 4000,mirror,64456.0,17816.0
+TOFFEE_CAKE,adaptive span 4000,vol_x0.6,47907.5,13791.0
+TOFFEE_CAKE,adaptive span 4000,vol_x1.5,149714.0,46354.0
+TOFFEE_CAKE,adaptive span 4000,bootstrap_1,77543.0,15437.0
+TOFFEE_CAKE,adaptive span 4000,bootstrap_2,64153.0,20014.0
+TOFFEE_CAKE,adaptive span 4000,bootstrap_3,56766.0,13439.0
+TOFFEE_CAKE,adaptive span 8000,real,65524.0,18255.0
+TOFFEE_CAKE,adaptive span 8000,toffee_+25,62287.5,18219.0
+TOFFEE_CAKE,adaptive span 8000,toffee_+50,54601.0,14847.0
+TOFFEE_CAKE,adaptive span 8000,toffee_-50,35906.0,7210.0
+TOFFEE_CAKE,adaptive span 8000,toffee_+50_midday,48713.0,13145.0
+TOFFEE_CAKE,adaptive span 8000,toffee_drift_+100,19339.0,2989.0
+TOFFEE_CAKE,adaptive span 8000,mirror,65524.0,18255.0
+TOFFEE_CAKE,adaptive span 8000,vol_x0.6,51349.5,15963.0
+TOFFEE_CAKE,adaptive span 8000,vol_x1.5,145597.0,47518.0
+TOFFEE_CAKE,adaptive span 8000,bootstrap_1,75981.0,16315.0
+TOFFEE_CAKE,adaptive span 8000,bootstrap_2,71926.0,21361.0
+TOFFEE_CAKE,adaptive span 8000,bootstrap_3,67611.0,19451.0
+PINK_PEARLS,"fixed 50,000",real,28048.0,8930.0
+PINK_PEARLS,"fixed 50,000",pearls_sum_+100,3422.0,-1662.0
+PINK_PEARLS,"fixed 50,000",pearls_sum_+100_midday,16626.0,3797.0
+PINK_PEARLS,"fixed 50,000",mirror,28048.0,8930.0
+PINK_PEARLS,"fixed 50,000",vol_x0.6,21258.0,6295.0
+PINK_PEARLS,"fixed 50,000",bootstrap_1,32334.5,8778.5
+PINK_PEARLS,"fixed 50,000",bootstrap_2,32773.0,9204.0
+PINK_PEARLS,"fixed 50,000",bootstrap_3,29940.0,8573.0
+PINK_PEARLS,adaptive span 200,real,22420.0,6804.0
+PINK_PEARLS,adaptive span 200,pearls_sum_+100,21804.0,6051.0
+PINK_PEARLS,adaptive span 200,pearls_sum_+100_midday,21414.0,6568.0
+PINK_PEARLS,adaptive span 200,mirror,22420.0,6804.0
+PINK_PEARLS,adaptive span 200,vol_x0.6,16966.0,4420.0
+PINK_PEARLS,adaptive span 200,bootstrap_1,23760.0,2997.0
+PINK_PEARLS,adaptive span 200,bootstrap_2,22220.0,4578.0
+PINK_PEARLS,adaptive span 200,bootstrap_3,25174.0,4958.0
+PINK_PEARLS,adaptive span 500,real,25018.0,7812.0
+PINK_PEARLS,adaptive span 500,pearls_sum_+100,22657.0,5838.0
+PINK_PEARLS,adaptive span 500,pearls_sum_+100_midday,24087.0,7266.0
+PINK_PEARLS,adaptive span 500,mirror,25018.0,7812.0
+PINK_PEARLS,adaptive span 500,vol_x0.6,15077.0,4208.0
+PINK_PEARLS,adaptive span 500,bootstrap_1,28763.0,5545.0
+PINK_PEARLS,adaptive span 500,bootstrap_2,22341.0,3073.0
+PINK_PEARLS,adaptive span 500,bootstrap_3,25040.0,4062.0
+PINK_PEARLS,adaptive span 1000,real,26717.0,8364.0
+PINK_PEARLS,adaptive span 1000,pearls_sum_+100,21204.0,5883.0
+PINK_PEARLS,adaptive span 1000,pearls_sum_+100_midday,23173.0,5330.0
+PINK_PEARLS,adaptive span 1000,mirror,26717.0,8364.0
+PINK_PEARLS,adaptive span 1000,vol_x0.6,16464.0,4517.0
+PINK_PEARLS,adaptive span 1000,bootstrap_1,30922.0,7373.0
+PINK_PEARLS,adaptive span 1000,bootstrap_2,29495.0,6757.0
+PINK_PEARLS,adaptive span 1000,bootstrap_3,35406.0,10260.0
+PINK_PEARLS,adaptive span 2000,real,26981.0,8036.0
+PINK_PEARLS,adaptive span 2000,pearls_sum_+100,16642.0,3998.0
+PINK_PEARLS,adaptive span 2000,pearls_sum_+100_midday,20710.0,4461.0
+PINK_PEARLS,adaptive span 2000,mirror,26981.0,8036.0
+PINK_PEARLS,adaptive span 2000,vol_x0.6,17934.0,5207.0
+PINK_PEARLS,adaptive span 2000,bootstrap_1,30984.0,7314.0
+PINK_PEARLS,adaptive span 2000,bootstrap_2,29993.0,6589.0
+PINK_PEARLS,adaptive span 2000,bootstrap_3,35455.0,10347.0
+PINK_PEARLS,adaptive span 5000,real,27125.0,8167.0
+PINK_PEARLS,adaptive span 5000,pearls_sum_+100,8158.0,-943.0
+PINK_PEARLS,adaptive span 5000,pearls_sum_+100_midday,16456.0,3668.0
+PINK_PEARLS,adaptive span 5000,mirror,27125.0,8167.0
+PINK_PEARLS,adaptive span 5000,vol_x0.6,17968.0,5217.0
+PINK_PEARLS,adaptive span 5000,bootstrap_1,32572.0,8751.0
+PINK_PEARLS,adaptive span 5000,bootstrap_2,30242.0,6882.0
+PINK_PEARLS,adaptive span 5000,bootstrap_3,35644.0,10555.0

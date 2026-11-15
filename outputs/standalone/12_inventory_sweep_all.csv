@@ -1,0 +1,145 @@
+product,params,d_2,d_1,d0,min_day,std_day,total,train_min
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3}",598.0,305.5,116.0,116.0,242.82727057176533,1019.5,305.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 10}",1497.0,71.0,-514.5,-514.5,1034.602862616054,1053.5,71.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25}",3029.0,1968.5,-503.0,-503.0,1812.3647765649532,4494.5,1968.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50}",4308.0,3593.5,-497.5,-497.5,2592.9269658052463,7404.0,3593.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3}",623.0,326.5,290.0,290.0,182.63510980458642,1239.5,326.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 10}",1806.0,19.0,-256.5,-256.5,1119.7600561429815,1568.5,19.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 25}",2053.0,214.0,-249.0,-249.0,1217.6133759668269,2018.0,214.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 50}",2053.0,214.0,-249.0,-249.0,1217.6133759668269,2018.0,214.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}",664.0,355.5,266.0,266.0,208.80074233584514,1285.5,355.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 10}",1297.0,166.5,-127.0,-127.0,751.8808083732421,1336.5,166.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 25}",1297.0,166.5,-127.0,-127.0,751.8808083732421,1336.5,166.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 50}",1297.0,166.5,-127.0,-127.0,751.8808083732421,1336.5,166.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3}",737.0,203.0,-184.5,-184.5,462.68680911966067,755.5,203.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 10}",1620.0,868.5,-336.0,-336.0,986.7039829655092,2152.5,868.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 25}",1326.0,868.5,-1058.0,-1058.0,1265.1853948466735,1136.5,868.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 50}",1326.0,868.5,-1058.0,-1058.0,1265.1853948466735,1136.5,868.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3}",602.0,127.0,-298.5,-298.5,450.4766919608605,430.5,127.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10}",940.0,109.0,-231.5,-231.5,602.6211496454468,817.5,109.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25}",940.0,109.0,-231.5,-231.5,602.6211496454468,817.5,109.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 50}",940.0,109.0,-231.5,-231.5,602.6211496454468,817.5,109.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 3}",426.0,-8.5,-121.0,-121.0,288.864299167158,296.5,-8.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 10}",481.0,-18.5,-103.0,-103.0,315.6201567285165,359.5,-18.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 25}",481.0,-18.5,-103.0,-103.0,315.6201567285165,359.5,-18.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 50}",481.0,-18.5,-103.0,-103.0,315.6201567285165,359.5,-18.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3}",345.0,94.0,2.0,2.0,177.5359118601079,441.0,94.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 10}",961.0,-286.5,185.5,-286.5,629.8730692237392,860.0,-286.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25}",2702.0,1441.5,385.0,385.0,1159.9957974061804,4528.5,1441.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50}",3487.0,1866.0,385.0,385.0,1551.526452669542,5738.0,1866.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3}",447.0,29.0,-97.0,-97.0,284.76188883580147,379.0,29.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 10}",1292.0,-182.0,-481.0,-481.0,949.1756072157214,629.0,-182.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 25}",1292.0,-638.5,-440.0,-638.5,1061.920940246181,213.5,-638.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 50}",1292.0,-638.5,-440.0,-638.5,1061.920940246181,213.5,-638.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}",633.0,233.5,15.0,15.0,313.3864759898444,881.5,233.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 10}",803.0,-350.5,-568.5,-568.5,737.0095544382945,-116.0,-350.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 25}",846.0,-350.5,-568.5,-568.5,761.5714564854262,-73.0,-350.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 50}",846.0,-350.5,-568.5,-568.5,761.5714564854262,-73.0,-350.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3}",318.0,-340.5,-523.5,-523.5,442.5745699879287,-546.0,-340.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 10}",1741.0,11.0,-368.0,-368.0,1124.308824715582,1384.0,11.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 25}",2307.0,828.0,-390.0,-390.0,1350.603198574622,2745.0,828.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 50}",2307.0,828.0,-390.0,-390.0,1350.603198574622,2745.0,828.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3}",3.0,-288.5,-455.5,-455.5,232.0501023486092,-741.0,-288.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10}",744.0,-367.5,-611.0,-611.0,722.3514264769838,-234.5,-367.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25}",744.0,-367.5,-611.0,-611.0,722.3514264769838,-234.5,-367.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 50}",744.0,-367.5,-611.0,-611.0,722.3514264769838,-234.5,-367.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 3}",91.0,-236.0,-286.0,-286.0,204.7592081771497,-431.0,-236.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 10}",317.0,-391.5,-740.5,-740.5,538.8381791719415,-815.0,-391.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 25}",317.0,-391.5,-740.5,-740.5,538.8381791719415,-815.0,-391.5
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 20, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 50}",317.0,-391.5,-740.5,-740.5,538.8381791719415,-815.0,-391.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3}",1372.5,3953.5,4988.0,1372.5,1862.0594109748486,10314.0,1372.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 10}",-1267.5,5223.0,9450.0,-1267.5,5398.439982995087,13405.5,-1267.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25}",-10430.0,-4631.5,16879.5,-10430.0,14388.389494658531,1818.0,-10430.0
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50}",-19968.5,-15400.0,24792.0,-19968.5,24629.82750142599,-10576.5,-19968.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3}",1372.5,3953.5,4988.0,1372.5,1862.0594109748486,10314.0,1372.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 10}",-1267.5,5223.0,9450.0,-1267.5,5398.439982995087,13405.5,-1267.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 25}",-10764.0,-4612.5,17297.5,-10764.0,14749.784374130131,1921.0,-10764.0
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 50}",-20709.5,-11324.5,25053.0,-20709.5,24171.633297110893,-6981.0,-20709.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}",1372.5,3953.5,4988.0,1372.5,1862.0594109748486,10314.0,1372.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 10}",-1290.5,5243.0,9450.0,-1290.5,5412.0823395436255,13402.5,-1290.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 25}",-11941.5,2620.5,16363.0,-11941.5,14154.227110066213,7042.0,-11941.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 50}",-15803.5,1156.5,18779.5,-15803.5,17292.559180179203,4132.5,-15803.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3}",1372.5,3953.5,4988.0,1372.5,1862.0594109748486,10314.0,1372.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 10}",-1267.5,5223.0,9450.0,-1267.5,5398.439982995087,13405.5,-1267.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 25}",-10430.0,-4631.5,16879.5,-10430.0,14388.389494658531,1818.0,-10430.0
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 50}",-19968.5,-15400.0,24792.0,-19968.5,24629.82750142599,-10576.5,-19968.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3}",1372.5,3953.5,4988.0,1372.5,1862.0594109748486,10314.0,1372.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10}",-1927.5,5243.0,9868.0,-1927.5,5943.350843589835,13183.5,-1927.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25}",-11433.0,-552.0,17270.5,-11433.0,14490.966033475246,5285.5,-11433.0
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 50}",-21053.5,-8462.5,21691.5,-21053.5,21965.62474261393,-7824.5,-21053.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 3}",1372.5,3953.5,4948.0,1372.5,1845.4805832989232,10274.0,1372.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 10}",-2755.5,5671.5,9607.0,-2755.5,6315.772524666586,12523.0,-2755.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 25}",-11198.5,3874.0,15016.5,-11198.5,13156.50528255889,7692.0,-11198.5
+TELLURIUM,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 50}",-13457.5,3626.0,13777.5,-13457.5,13763.74555066074,3946.0,-13457.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3}",1115.5,3122.5,2147.0,1115.5,1003.6302024816379,6385.0,1115.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 10}",5496.5,8076.5,11830.0,5496.5,3184.8177472711577,25403.0,5496.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25}",9128.0,9983.5,5870.5,5870.5,2170.2517327105934,24982.0,9128.0
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50}",3694.5,10508.0,18266.0,3694.5,7290.8499561665185,32468.5,3694.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3}",1079.5,2605.5,2202.0,1079.5,790.726933481675,5887.0,1079.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 10}",5204.5,10278.0,11583.0,5204.5,3369.685680198278,27065.5,5204.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 25}",6495.0,4895.0,5345.5,4895.0,825.0556041867724,16735.5,4895.0
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 50}",9195.5,10879.0,26252.0,9195.5,9399.357189900453,46326.5,9195.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}",995.5,2924.5,2299.0,995.5,984.1581427799091,6219.0,995.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 10}",4661.5,10048.0,9840.0,4661.5,3051.625482154279,24549.5,4661.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 25}",8747.5,10010.5,6091.5,6091.5,2000.3360551000758,24849.5,8747.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 50}",9583.0,7064.5,5784.0,5784.0,1932.8270960780048,22431.5,7064.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3}",1333.5,2137.5,483.0,483.0,827.3589003570337,3954.0,1333.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 10}",6254.5,5632.5,6558.0,5632.5,471.7955948642731,18445.0,5632.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 25}",-802.0,9104.0,-10973.5,-10973.5,10039.042571380998,-2671.5,-802.0
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 50}",-6575.5,11027.5,4507.0,-6575.5,8899.478781554195,8959.0,-6575.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3}",1333.5,2646.5,617.0,617.0,1029.2563253793164,4597.0,1333.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10}",6440.5,8160.5,8893.0,6440.5,1258.9488009181841,23494.0,6440.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25}",12570.0,9502.5,3610.0,3610.0,4553.619668278559,25682.5,9502.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 50}",9500.0,9477.5,1939.5,1939.5,4358.576038493918,20917.0,9477.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 3}",1226.5,2977.5,1458.0,1226.5,951.1811516915867,5662.0,1226.5
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 10}",3489.0,7148.5,5184.0,3489.0,1831.4031733436889,15821.5,3489.0
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 25}",7696.0,9000.0,-5272.5,-5272.5,7890.782222526062,11423.5,7696.0
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 50}",8306.0,10130.5,-1163.0,-1163.0,6062.643860836074,17273.5,8306.0
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3}",-766.5,742.0,426.0,-766.5,795.5589753961257,401.5,-766.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 10}",-2396.5,1527.0,1131.0,-2396.5,2160.012519253843,261.5,-2396.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25}",-1696.0,979.0,-2433.0,-2433.0,1795.3893728102548,-3150.0,-1696.0
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50}",-1409.5,-181.0,-2628.0,-2628.0,1223.503405525842,-4218.5,-1409.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3}",-766.5,742.0,426.0,-766.5,795.5589753961257,401.5,-766.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 10}",-2396.5,1527.0,1131.0,-2396.5,2160.012519253843,261.5,-2396.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 25}",-1696.0,979.0,-2433.0,-2433.0,1795.3893728102548,-3150.0,-1696.0
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 50}",-1409.5,-181.0,-2628.0,-2628.0,1223.503405525842,-4218.5,-1409.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}",-766.5,742.0,426.0,-766.5,795.5589753961257,401.5,-766.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 10}",-2396.5,1527.0,1131.0,-2396.5,2160.012519253843,261.5,-2396.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 25}",-2428.0,1422.0,-1353.0,-2428.0,1986.5694886747187,-2359.0,-2428.0
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 50}",-2428.0,1422.0,-1353.0,-2428.0,1986.5694886747187,-2359.0,-2428.0
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3}",-766.5,742.0,426.0,-766.5,795.5589753961257,401.5,-766.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 10}",-2396.5,1527.0,1131.0,-2396.5,2160.012519253843,261.5,-2396.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 25}",-1696.0,979.0,-2433.0,-2433.0,1795.3893728102548,-3150.0,-1696.0
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 50}",-1409.5,-181.0,-2628.0,-2628.0,1223.503405525842,-4218.5,-1409.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3}",-766.5,742.0,426.0,-766.5,795.5589753961257,401.5,-766.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10}",-2396.5,1527.0,1131.0,-2396.5,2160.012519253843,261.5,-2396.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25}",-1696.0,1164.0,-2335.0,-2335.0,1863.2821400242458,-2867.0,-1696.0
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 50}",-1610.5,1060.0,-2335.0,-2335.0,1788.038753308589,-2885.5,-1610.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 3}",-766.5,742.0,426.0,-766.5,795.5589753961257,401.5,-766.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 10}",-2448.5,1666.0,1047.0,-2448.5,2218.5126962299164,264.5,-2448.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 25}",-2634.5,1932.0,791.0,-2634.5,2376.5820520234515,88.5,-2634.5
+JELLY,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 50}",-2634.5,1932.0,791.0,-2634.5,2376.5820520234515,88.5,-2634.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 3}",139.5,1055.0,-1017.0,-1017.0,1038.3333199571964,177.5,139.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 10}",632.0,2679.5,-1657.0,-1657.0,2169.370473201846,1654.5,632.0
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 25}",-94.0,1353.0,-1171.0,-1171.0,1266.5118765070201,88.0,-94.0
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 0, 'soft_cap': 50}",-94.0,-1490.5,-2998.0,-2998.0,1452.353521013393,-4582.5,-1490.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 3}",139.5,1055.0,-1017.0,-1017.0,1038.3333199571964,177.5,139.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 10}",632.0,2679.5,-1657.0,-1657.0,2169.370473201846,1654.5,632.0
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 25}",-94.0,1399.0,-833.0,-833.0,1137.0278507289668,472.0,-94.0
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 5, 'soft_cap': 50}",-94.0,1399.0,-833.0,-833.0,1137.0278507289668,472.0,-94.0
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 3}",139.5,1055.0,-1017.0,-1017.0,1038.3333199571964,177.5,139.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 10}",-420.5,3082.0,-1631.0,-1631.0,2447.6242052243233,1030.5,-420.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 25}",-420.5,2682.5,-1140.0,-1140.0,2031.3294292162461,1122.0,-420.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 1, 'skew': 15, 'soft_cap': 50}",-420.5,2682.5,-1140.0,-1140.0,2031.3294292162461,1122.0,-420.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 3}",-246.5,-252.5,-547.0,-547.0,171.78790217396954,-1046.0,-252.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 10}",-1702.0,-1060.0,-793.0,-1702.0,467.21408369183393,-3555.0,-1702.0
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 25}",-1704.5,-1675.5,-665.0,-1704.5,591.9616400860223,-4045.0,-1704.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 0, 'soft_cap': 50}",-1724.5,-1675.5,-1497.0,-1724.5,119.7354723268478,-4897.0,-1724.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 3}",-205.5,-240.5,-516.0,-516.0,170.06640859773964,-962.0,-240.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 10}",-319.5,711.5,-23.0,-319.5,530.7798507856153,369.0,-319.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 25}",-319.5,711.5,-23.0,-319.5,530.7798507856153,369.0,-319.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 5, 'soft_cap': 50}",-319.5,711.5,-23.0,-319.5,530.7798507856153,369.0,-319.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 3}",-32.5,25.5,-1251.0,-1251.0,720.8280539305705,-1258.0,-32.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 10}",-210.5,293.5,-1156.0,-1156.0,735.8709692149388,-1073.0,-210.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 25}",-210.5,293.5,-1156.0,-1156.0,735.8709692149388,-1073.0,-210.5
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 100, 'make_edge': 3, 'skew': 15, 'soft_cap': 50}",-210.5,293.5,-1156.0,-1156.0,735.8709692149388,-1073.0,-210.5

@@ -1,0 +1,56 @@
+scoring C:/Users/rithi/AppData/Local/Temp/claude/C--Users-rithi-Documents-QuantiFi-2026/304cc548-f4a6-4ce1-8662-42f279eaefb7/scratchpad/trader_weak_v2.py on 22 scenarios
+PnL over days -2..0 in k coins (worst_day = worst single day):
+ group                   basket  options  pearls  standalone  TOTAL  worst_day  vs_real_%
+scenario                                                                                
+real                       7.9    130.2    35.2       187.6  361.0      113.0        0.0
+toffee_+25                 7.9    130.2    35.2       144.1  317.5      100.0      -12.1
+toffee_+50                 7.9    130.2    35.2       121.4  294.8       94.7      -18.3
+toffee_-50                 7.9    130.2    35.2       117.3  290.6       91.7      -19.5
+toffee_+50_midday          7.9    130.2    35.2       149.5  322.9      101.4      -10.6
+toffee_drift_+100          7.9    130.2    35.2       121.5  294.8       93.1      -18.3
+amethyst_+5                7.9    130.2    35.2       185.7  359.1      112.4       -0.5
+pearls_sum_+100            7.9    130.2    10.6       187.6  336.3      105.5       -6.8
+pearls_sum_+100_midday     7.9    130.2    22.3       187.6  348.0      109.2       -3.6
+basket_premium_+300        5.8    130.2    35.2       187.6  358.9      114.7       -0.6
+basket_premium_rw         -0.6    130.2    35.2       187.6  352.4      111.4       -2.4
+mirror                     7.9    130.2    35.2       188.3  361.6      113.0        0.2
+vol_x1.5                   8.0    130.2    43.2       276.6  458.0      136.4       26.9
+vol_x0.6                   7.6    130.2    27.4       163.7  328.9      103.0       -8.9
+spread_+1                  7.5    130.2    30.5       182.5  350.7      105.5       -2.9
+lychee_vol_x1.5            7.9    142.9    35.2       187.6  373.7      116.8        3.5
+iv_x1.2                    7.9    200.3    35.2       187.6  431.0      126.2       19.4
+iv_x0.8                    7.9     66.3    35.2       187.6  297.1       91.7      -17.7
+bootstrap_1               24.2    130.2    34.4       183.3  372.1       98.6        3.1
+bootstrap_2               22.3    130.2    37.7       173.1  363.3      113.0        0.6
+bootstrap_3               33.7    130.2    33.7       202.2  399.9      122.5       10.8
+continuous                 7.6    138.1    34.4       190.5  370.6      118.6        2.7
+
+Change vs real data (k coins, 3 days), key products:
+                         TOFFEE_CAKE  PAPER_LANTERNS  TELLURIUM  AMETHYST  PINK_PEARLS  GOLDEN_PEARLS  basket  options
+scenario                                                                                                             
+real                            0.0             0.0        0.0       0.0          0.0            0.0     0.0      0.0
+toffee_+25                    -43.5             0.0        0.0       0.0          0.0            0.0     0.0      0.0
+toffee_+50                    -66.2             0.0        0.0       0.0          0.0            0.0     0.0      0.0
+toffee_-50                    -70.4             0.0        0.0       0.0          0.0            0.0     0.0      0.0
+toffee_+50_midday             -38.1             0.0        0.0       0.0          0.0            0.0     0.0      0.0
+toffee_drift_+100             -66.2             0.0        0.0       0.0          0.0            0.0     0.0      0.0
+amethyst_+5                     0.0             0.0        0.0      -1.9          0.0            0.0     0.0      0.0
+pearls_sum_+100                 0.0             0.0        0.0       0.0        -24.6            0.0     0.0      0.0
+pearls_sum_+100_midday          0.0             0.0        0.0       0.0        -11.4            0.0     0.0      0.0
+basket_premium_+300             0.0             0.0        0.0       0.0          0.0            0.0    -2.1      0.0
+basket_premium_rw               0.0             0.0        0.0       0.0          0.0            0.0    -8.5      0.0
+mirror                          0.0             0.0        0.6       0.0          0.0           -0.0     0.0      0.0
+vol_x1.5                       82.4            11.4       -3.9       0.0          6.2            1.6     0.1      0.0
+vol_x0.6                      -17.0            -2.6       -5.0       0.0         -6.8           -0.9    -0.3      0.0
+spread_+1                      -1.9            -4.0       -1.2       1.1         -5.0            0.2    -0.4      0.0
+lychee_vol_x1.5                 0.0             0.0        0.0       0.0          0.0            0.0     0.0     12.7
+iv_x1.2                         0.0             0.0        0.0       0.0          0.0            0.0     0.0     70.1
+iv_x0.8                         0.0             0.0        0.0       0.0          0.0            0.0     0.0    -63.9
+bootstrap_1                    12.5            -6.1      -11.1       0.1          4.3           -5.0    16.3      0.0
+bootstrap_2                     8.3           -25.6       -2.6      -0.1          4.7           -2.3    14.4      0.0
+bootstrap_3                    -2.0            -8.9       26.9       0.0          1.9           -2.6    25.8      0.0
+continuous                      1.0             0.2        2.8      -0.0         -0.0           -0.0    -0.3      7.9
+
+real	7m0.639s
+user	0m0.015s
+sys	0m0.015s

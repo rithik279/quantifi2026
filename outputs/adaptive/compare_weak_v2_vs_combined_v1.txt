@@ -1,0 +1,30 @@
+k coins over days -2..0
+                         weak_v2 total  combined_v1 total  change  weak_v2 worst day  combined_v1 worst day
+scenario                                                                                                  
+real                            361.0              361.4     0.4              113.0                  109.8
+toffee_+25                      317.5              342.3    24.8              100.0                  106.5
+toffee_+50                      294.8              349.3    54.5               94.7                  108.2
+toffee_-50                      290.6              344.7    54.1               91.7                  108.2
+toffee_+50_midday               322.9              349.3    26.4              101.4                  107.2
+toffee_drift_+100               294.8              350.0    55.2               93.1                  113.8
+amethyst_+5                     359.1              359.4     0.4              112.4                  109.2
+pearls_sum_+100                 336.3              354.5    18.2              105.5                  106.6
+pearls_sum_+100_midday          348.0              355.4     7.4              109.2                  109.0
+basket_premium_+300             358.9              359.3     0.4              114.7                  111.5
+basket_premium_rw               352.4              352.8     0.4              111.4                  108.2
+mirror                          361.6              362.0     0.4              113.0                  109.8
+vol_x1.5                        458.0              458.4     0.4              136.4                  137.1
+vol_x0.6                        328.9              329.3     0.4              103.0                   99.8
+spread_+1                       350.7              351.1     0.4              105.5                  102.3
+lychee_vol_x1.5                 373.7              370.8    -2.8              116.8                  113.6
+iv_x1.2                         431.0              429.4    -1.7              126.2                  132.6
+iv_x0.8                         297.1              310.0    12.9               91.7                   93.6
+bootstrap_1                     372.1              370.8    -1.4               98.6                   95.4
+bootstrap_2                     363.3              362.3    -1.0              113.0                  109.8
+bootstrap_3                     399.9              397.5    -2.3              122.5                  119.3
+continuous                      370.6              367.9    -2.8              118.6                  113.7
+
+                         weak_v2 total  combined_v1 total
+real days                       361.0              361.4
+worst scenario                  290.6              310.0
+average over scenarios          351.5              363.2

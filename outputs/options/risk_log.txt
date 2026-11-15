@@ -1,0 +1,6 @@
+unhedged       PnL by day {-2: 43940, -1: 37911, 0: 44732}  total 126,584  (LYCHEE leg 0)
+               net delta: mean -10.5, mean |delta| 101.4, 95th pct |delta| 217, max 259
+hedge_band60   PnL by day {-2: 46218, -1: 43983, 0: 39994}  total 130,195  (LYCHEE leg 3,612)
+               net delta: mean -4.2, mean |delta| 34.7, 95th pct |delta| 70, max 110
+hedge_band120  PnL by day {-2: 52876, -1: 49811, 0: 38938}  total 141,624  (LYCHEE leg 15,040)
+               net delta: mean -4.5, mean |delta| 64.6, 95th pct |delta| 124, max 175

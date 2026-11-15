@@ -1,0 +1,19 @@
+variant,day,pnl,units,edge_at_fill,after_100_ticks,final_pos,share_of_volume
+"current (touch, cap 10, skew 5)",-2,-319.5,107,349.5,-584.5,-1,0.6
+"current (touch, cap 10, skew 5)",-1,711.5,75,234.0,-382.0,-1,0.5
+"current (touch, cap 10, skew 5)",0,-23.0,90,288.0,-1476.0,4,0.6
+"max size (cap 50, skew 0)",-2,-1724.5,139,449.0,-838.5,-27,0.7
+"max size (cap 50, skew 0)",-1,-1675.5,101,316.5,-4.5,-9,0.7
+"max size (cap 50, skew 0)",0,-1497.0,115,366.0,-1413.0,-17,0.8
+max size + skew 5,-2,-319.5,107,349.5,-584.5,-1,0.6
+max size + skew 5,-1,711.5,75,234.0,-382.0,-1,0.5
+max size + skew 5,0,-23.0,90,288.0,-1476.0,4,0.6
+"tight: fair=mid, make_edge 0.5",-2,-94.0,194,586.5,-1110.0,0,1.0
+"tight: fair=mid, make_edge 0.5",-1,1217.0,134,394.5,26.0,-24,0.9
+"tight: fair=mid, make_edge 0.5",0,-1249.0,133,410.0,-1373.0,-17,0.9
+penny 1 inside the touch,-2,-288.0,194,392.5,-1304.0,0,1.0
+penny 1 inside the touch,-1,1109.0,134,286.5,-82.0,-24,0.9
+penny 1 inside the touch,0,-1342.0,133,317.0,-1466.0,-17,0.9
+penny 2 inside the touch,-2,-441.0,194,239.5,-1457.0,0,1.0
+penny 2 inside the touch,-1,1038.0,134,215.5,-153.0,-24,0.9
+penny 2 inside the touch,0,-1414.0,133,245.0,-1538.0,-17,0.9

@@ -1,0 +1,12 @@
+claim,h,slope,t_naive,t_newey_west,t_nonoverlap_mean,n_nonoverlap,inflation
+"PINK next-h change on (sum - 50,000)",20,-0.3829,-97.8319,-18.4045,-21.9715,1499,5.3156
+"PINK next-h change on (sum - 50,000)",50,-0.6686,-112.6865,-19.2008,-15.7568,599,5.8688
+"PINK next-h change on (sum - 50,000)",200,-0.9764,-71.6471,-9.2053,-4.8246,149,7.7833
+"TOFFEE next-h change on (mid - 5,000)",100,-0.441,-91.8917,-11.9362,-9.2771,299,7.6986
+"TOFFEE next-h change on (mid - 5,000)",1000,-1.1142,-197.1794,-15.6545,-5.7769,29,12.5957
+LANTERNS next-h change on past smoothed h change,50,0.9221,237.226,54.4649,33.3244,598,4.3556
+LANTERNS next-h change on past smoothed h change,1000,0.3853,62.3074,3.5877,1.7246,28,17.3668
+Basket premium next-3000 change on (premium - 0),3000,-0.5005,-125.9482,-3.8978,-2.0348,9,32.3125
+BLUE next-5 change on its last-5 change,5,0.198,34.9763,10.2024,15.6414,5998,3.4282
+"JELLY next-h change on (JELLY - 0.41 PB gap - its 1,000-EMA)",100,-0.031,-5.6727,-0.7104,-0.5067,299,7.9855
+"JELLY next-h change on (JELLY - 0.41 PB gap - its 1,000-EMA)",500,-0.5007,-38.9902,-2.1664,-1.7906,59,17.9981

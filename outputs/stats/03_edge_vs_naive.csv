@@ -1,0 +1,9 @@
+edge,vs,edge_total,naive_total,diff_total,blocks_edge_better,t_hac_diff,sign_p
+TOFFEE base,TOFFEE no anchor,70099.0,4696.0,65403.0,0.8333,9.4673,0.0002
+LANTERNS base,LANTERNS no trend lead,58050.5,-17619.5,75670.0,1.0,6.8791,0.0
+TELLURIUM base,TELLURIUM no glide,57092.0,26694.5,30397.5,0.5667,2.7271,0.0173
+TELLURIUM base,TELLURIUM plain MM,57092.0,9197.0,47895.0,0.6,2.5887,0.061
+TELLURIUM no glide,TELLURIUM plain MM,26694.5,9197.0,17497.5,0.5667,1.4118,0.2923
+PINK base,PINK no sum signal,28048.0,5820.5,22227.5,0.9667,9.9612,0.0
+GOLDEN base,GOLDEN no slide,5043.0,1064.0,3979.0,0.3,1.8937,0.0107
+options base,options fixed take threshold,130589.5,130195.0,394.5,0.5333,0.0573,0.4278

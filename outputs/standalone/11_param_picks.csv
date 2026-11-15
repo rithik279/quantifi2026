@@ -1,0 +1,7 @@
+product,params,d_2,d_1,d0,total
+AMETHYST,"{'fair': 'fixed', 'value': 10000, 'take_edge': 0.5, 'make_edge': 0.5, 'skew': 0}",527.0,608.0,477.5,1612.5
+TOFFEE_CAKE,"{'fair': 'ema', 'span': 10, 'anchor': 5000, 'anchor_w': 0.5, 'take_edge': 8, 'make_edge': 2, 'skew': 0}",24080.0,24774.0,21245.0,70099.0
+PAPER_LANTERNS,"{'fair': 'ema', 'span': 5, 'take_edge': 1, 'make_edge': 1, 'skew': 0}",4308.0,3593.5,-497.5,7404.0
+TELLURIUM,"{'fair': 'mid', 'flow_beta': 0.8, 'flow_decay': 0.9, 'take_edge': 100, 'make_edge': 5, 'skew': 5}",14474.5,15587.0,-23124.0,6937.5
+JELLY,"{'fair': 'ema', 'span': 5, 'take_edge': 2, 'make_edge': 1, 'skew': 0}",18040.0,16348.0,-22859.0,11529.0
+PEANUT_BUTTER,"{'fair': 'mid', 'take_edge': 2, 'make_edge': 3, 'skew': 10}",283.5,284.0,-1176.0,-608.5

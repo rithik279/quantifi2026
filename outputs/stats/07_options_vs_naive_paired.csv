@@ -1,0 +1,4 @@
+comparison,diff_total,blocks_better,t_hac,sign_p
+BS vs slow-EMA fair,83858.5,0.633,2.401,0.1
+BS vs current-mid fair,192664.5,0.867,7.289,0.0
+hedged vs unhedged BS,-5195.5,0.533,-0.27,0.428
