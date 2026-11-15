@@ -3,7 +3,7 @@
 This is our shared home base: a quick map of what's here, what we've learned so far, and how we can split the work so everyone moves fast in parallel without losing sight of each other's progress. It's written for you and for whatever coding agent you use, so either can get up to speed in a few minutes. Nothing here is fixed. If you see a better way to organize things, change it.
 
 **Team #21:** Selena Zhang, Michael Xu, Jeffery Hu, Rithik Singh
-**Deadline:** Nov 1, 11:59 PM. Submit one `trader.py` plus an abstract of at most 5 pages.
+**Submitted:** Nov 1. The final trader is `submission/Team21_Trader.py` (v10, frozen) and the abstract is `submission/Team21_Abstract.pdf`.
 
 ## 1. What we're building
 

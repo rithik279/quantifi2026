@@ -9,7 +9,8 @@ List:  python src/scenarios.py
 
 Editing tools (each works on one product):
   shift    add a per-tick integer offset to the book and the trades (level shifts, drifts, regime breaks)
-  mirror   price -> 2C - price, bids <-> asks, buyers <-> sellers (same statistics, opposite direction)
+  mirror   price -> 2C - price, bids <-> asks (same statistics, opposite direction; the trades'
+           buyer/seller fields are empty in this data, so there is nothing to swap)
   vol      stretch or shrink moves around a smoothed path
   widen    push bids and asks k ticks further apart (trades at the touch move with them)
   reprice  options: move LYCHEE and/or change implied vol, re-pricing each voucher with Black-Scholes

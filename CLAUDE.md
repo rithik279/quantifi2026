@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-UTEFA QuantiFi 2026, Team #21. We're building one `trader.py` (an IMC Prosperity-style `Trader.run(state)`) plus an abstract of at most 5 pages. Both are due **Nov 1, 11:59 PM**.
+UTEFA QuantiFi 2026, Team #21. We built one `trader.py` (an IMC Prosperity-style `Trader.run(state)`) plus an abstract of at most 5 pages. Both were submitted on **Nov 1**. The final trader is `submission/Team21_Trader.py` (v10), and it's frozen: don't edit or regenerate it.
 
 **Read [GETTING_STARTED.md](GETTING_STARTED.md) first.** It covers the repo map, the gotchas, the workstreams and the branch workflow. The rules are in `docs/context/Official Information/`.
 

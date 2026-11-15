@@ -1,4 +1,8 @@
-"""Build the single-file submission `submission/trader.py` from src/strategies/*.py.
+"""Build a single-file trader from src/strategies/*.py (written to `submission/trader_built.py`).
+
+NOTE: the final submission (`submission/Team21_Trader.py`, copied to `submission/trader.py`) was merged
+by hand and can't be rebuilt with this tool. The default output path was moved so a rebuild never
+overwrites it.
 
 Each strategy file is a self-contained Trader for its own products. The submission must be ONE file
 with ONE `Trader` class, so this script:
@@ -9,11 +13,11 @@ with ONE `Trader` class, so this script:
      in its own slot of traderData.
 
 Run from repo root:  python tools/build_trader.py
-Then check:         python src/backtester.py submission/trader.py
+Then check:         python src/backtester.py submission/trader_built.py
 
 Options:
   --groups g1 g2 ...        strategy files to combine (default: GROUPS below)
-  --out path                output file (default: submission/trader.py)
+  --out path                output file (default: submission/trader_built.py)
   --set group.NAME=VALUE    replace a one-line top-level constant of a group before inlining,
                             e.g. --set standalone.JUMP_GUARD=None  (builds a variant without editing sources)
 """
@@ -27,7 +31,7 @@ import tokenize
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GROUPS = ["standalone", "pearls", "basket", "smile"]  # best-366k used "options" instead of "smile"
-OUT = os.path.join(ROOT, "submission", "trader.py")
+OUT = os.path.join(ROOT, "submission", "trader_built.py")  # NOT trader.py: that is the frozen final submission
 
 
 def top_level_names(tree: ast.Module) -> set:
