@@ -4,7 +4,7 @@
 
 **Team #21 won the UTEFA QuantiFi 2026 algorithmic trading competition (National Bank).**
 
-Team: Selena Zhang, Michael Xu, Jeffery Hu, Rithik Singh.
+Team: Selena Zhang, Michael Xu, Jeffrey Hu, Rithik Singh.
 
 **What we built:** one Python trader covering every product in the competition, in four families:
 - **Market making on single products** (AMETHYST, TOFFEE_CAKE, PAPER_LANTERNS, JELLY, PEANUT_BUTTER), each with its own fair value.
